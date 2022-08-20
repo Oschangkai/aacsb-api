@@ -1,0 +1,11 @@
+{
+  "SwaggerSettings": {
+    "Enable": true,
+    "Title": "NTUST AACSB WebAPI",
+    "Version": "v1",
+    "Description": "NTUST AACSB Integration API",
+    "ContactName": "KaiYi Chang",
+    "ContactEmail": "ntust@yi.contact",
+    "ContactUrl": "https://linkedin.com/in/kaiyeee"
+  }
+}

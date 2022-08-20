@@ -1,0 +1,1 @@
+﻿global using AACSB.WebApi.Domain.Common.Contracts;
