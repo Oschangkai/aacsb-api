@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>AACSB.WebAPI</id>
+    <title>AACSB WebAPI</title>
+    <version>0.0.1</version>
+    <authors>KaiYi Chang</authors>
+    <description>
+      Clean Architecture for .NET 6.0 WebAPI built with Multitenancy Support.
+    </description>
+    <language>zh-TW</language>
+    <repository type="git" url=""/>
+  </metadata>
+  <files>
+    <file src=".\**" target="content" exclude="**\bin\**;**\obj\**;**\.git\**;**\.github\**;**\*.user;**\.vs\**;**\Images\**;**\Logs\**" />
+  </files>
+</package>

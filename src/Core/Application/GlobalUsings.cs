@@ -1,0 +1,17 @@
+global using Ardalis.Specification;
+global using FluentValidation;
+global using AACSB.WebApi.Application.Common.Events;
+global using AACSB.WebApi.Application.Common.Exceptions;
+global using AACSB.WebApi.Application.Common.FileStorage;
+global using AACSB.WebApi.Application.Common.Interfaces;
+global using AACSB.WebApi.Application.Common.Models;
+global using AACSB.WebApi.Application.Common.Persistence;
+global using AACSB.WebApi.Application.Common.Specification;
+global using AACSB.WebApi.Application.Common.Validation;
+global using AACSB.WebApi.Domain.Catalog;
+global using AACSB.WebApi.Domain.Common;
+global using AACSB.WebApi.Domain.Common.Contracts;
+global using AACSB.WebApi.Shared.Notifications;
+global using MediatR;
+global using Microsoft.Extensions.Localization;
+global using Microsoft.Extensions.Logging;
