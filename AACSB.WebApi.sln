@@ -55,6 +55,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrators.SqLite", "src\Mig
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{0C8EECDB-82E3-4E27-8C49-508F25DC2CAA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{60D51412-DCA1-4AB4-B352-F4D1840697C5}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\OnionArchitecture.md = Documents\OnionArchitecture.md
+		Documents\Project Structure.md = Documents\Project Structure.md
+		Documents\README.md = Documents\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +131,7 @@ Global
 		{5B986063-2160-4F86-AF1D-7F97671146C5} = {225C0FD8-B796-4E9E-B1E7-0E4CD13F2E45}
 		{4881A50F-5C2B-4381-81FD-3ECA11450016} = {B778FB14-BDFD-454E-9FD7-5CE3572552B7}
 		{0C8EECDB-82E3-4E27-8C49-508F25DC2CAA} = {626CE5D3-A235-429B-9709-66007CD169A7}
+		{60D51412-DCA1-4AB4-B352-F4D1840697C5} = {626CE5D3-A235-429B-9709-66007CD169A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0D80036-558A-4A3A-A0BE-00CED864A4DD}
