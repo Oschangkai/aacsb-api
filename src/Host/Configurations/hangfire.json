@@ -21,7 +21,7 @@
     },
     "Storage": {
       "StorageProvider": "mssql",
-      "ConnectionString": "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=fullStackHeroDb;Integrated Security=True;MultipleActiveResultSets=True",
+      "ConnectionString": "Data Source=127.0.0.1;Initial Catalog=AACSB;Integrated Security=False;MultipleActiveResultSets=True;User ID=sa;Password=P@$$w0rd",
       "Options": {
         "CommandBatchMaxTimeout": "00:05:00",
         "QueuePollInterval": "00:00:01",
