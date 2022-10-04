@@ -1,0 +1,26 @@
+[
+  {
+    "Code": 1,
+    "Name": "Management"
+  },
+  {
+    "Code": 2,
+    "Name": "Operations Management"
+  },
+  {
+    "Code": 3,
+    "Name": "Data Science"
+  },
+  {
+    "Code": 4,
+    "Name": "Finance and Accounting"
+  },
+  {
+    "Code": 5,
+    "Name": "Computer and MIS"
+  },
+  {
+    "Code": 6,
+    "Name": "Law and Policy"
+  }
+]
