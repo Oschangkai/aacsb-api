@@ -20,8 +20,14 @@
 > This project will migrate db automatically.
 
 ## DB Add Migration
-```
-dotnet ef migrations add <CommitMessage> --project ./src/Migrators/Migrators.<DBProvider>/ --context ApplicationDbContext -o Migrations/Application
+```bash
+$ dotnet ef migrations add <CommitMessage> \
+    --project ./src/Migrators/Migrators.<DBProvider>/ \
+    --context ApplicationDbContext \
+    -o Migrations/Application \
+    --startup-project ./src/Host
+# revert
+$ dotnet ef database update <previous-migration-name>
 ```
 
 ## Environment Variables
