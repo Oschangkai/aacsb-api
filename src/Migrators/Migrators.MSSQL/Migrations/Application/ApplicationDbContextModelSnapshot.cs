@@ -73,38 +73,10 @@ namespace Migrators.MSSQL.Migrations.Application
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CourseCode")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("CourseCredit")
-                        .HasPrecision(6, 4)
-                        .HasColumnType("decimal(6,4)");
-
-                    b.Property<string>("CourseName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("CourseNameEng")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("CourseRequired")
-                        .HasColumnType("bit")
-                        .HasComment("必修/選修");
-
-                    b.Property<string>("CourseTime")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .HasComment("節次，M1, T6, W3，以逗點分隔");
-
-                    b.Property<bool>("CourseYear")
-                        .HasColumnType("bit")
-                        .HasComment("全半學年");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -112,20 +84,25 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Credit")
+                        .HasPrecision(6, 4)
+                        .HasColumnType("decimal(6,4)");
+
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("DisciplineCode")
-                        .HasPrecision(2)
-                        .HasColumnType("decimal(2,0)");
-
-                    b.Property<Guid>("DisciplineId")
+                    b.Property<Guid?>("DisciplineId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ImportSignatureId")
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("ImportSignatureId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -134,30 +111,34 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Semester")
-                        .HasPrecision(5)
-                        .HasColumnType("decimal(5,0)");
-
-                    b.Property<string>("TeacherEnglishName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("Required")
+                        .HasColumnType("bit")
+                        .HasComment("必修/選修");
 
-                    b.Property<string>("TeacherName")
+                    b.Property<decimal>("Semester")
+                        .HasPrecision(5)
+                        .HasColumnType("decimal(5,0)");
+
+                    b.Property<string>("Time")
                         .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasComment("節次，M1, T6, W3，以逗點分隔");
+
+                    b.Property<bool>("Year")
+                        .HasColumnType("bit")
+                        .HasComment("全半學年");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DisciplineId");
 
                     b.HasIndex("ImportSignatureId");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Courses", "Catalog");
                 });
@@ -218,11 +199,20 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -325,7 +315,7 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid>("ImportSignatureId")
+                    b.Property<Guid?>("ImportSignatureId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -350,11 +340,11 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(100)")
                         .HasComment("MT/RES/... 可以為多值，以逗點分割");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("WorkType")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<string>("TypeAbbr")
+                    b.Property<string>("WorkTypeAbbr")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasComment("P=Full Time, F=Part Time, C=Contractual");
@@ -577,6 +567,21 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.HasAnnotation("Finbuckle:MultiTenant", true);
                 });
 
+            modelBuilder.Entity("CourseTeacher", b =>
+                {
+                    b.Property<Guid>("CoursesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeachersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CoursesId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("CourseTeacher", "Catalog");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -699,19 +704,11 @@ namespace Migrators.MSSQL.Migrations.Application
                 {
                     b.HasOne("AACSB.WebApi.Domain.Catalog.Discipline", "Discipline")
                         .WithMany("Courses")
-                        .HasForeignKey("DisciplineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DisciplineId");
 
                     b.HasOne("AACSB.WebApi.Domain.Catalog.ImportSignature", "ImportSignature")
                         .WithMany("Courses")
-                        .HasForeignKey("ImportSignatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AACSB.WebApi.Domain.Catalog.Teacher", null)
-                        .WithMany("Courses")
-                        .HasForeignKey("TeacherId");
+                        .HasForeignKey("ImportSignatureId");
 
                     b.Navigation("Discipline");
 
@@ -733,9 +730,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 {
                     b.HasOne("AACSB.WebApi.Domain.Catalog.ImportSignature", "ImportSignature")
                         .WithMany("Teachers")
-                        .HasForeignKey("ImportSignatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ImportSignatureId");
 
                     b.Navigation("ImportSignature");
                 });
@@ -745,6 +740,21 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.HasOne("AACSB.WebApi.Infrastructure.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CourseTeacher", b =>
+                {
+                    b.HasOne("AACSB.WebApi.Domain.Catalog.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AACSB.WebApi.Domain.Catalog.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -801,11 +811,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Navigation("Courses");
 
                     b.Navigation("Teachers");
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.Catalog.Teacher", b =>
-                {
-                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }
