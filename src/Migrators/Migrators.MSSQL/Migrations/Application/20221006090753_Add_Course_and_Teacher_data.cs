@@ -55,6 +55,8 @@ namespace Migrators.MSSQL.Migrations.Application
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -68,61 +70,21 @@ namespace Migrators.MSSQL.Migrations.Application
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teachers",
-                schema: "Catalog",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    Qualification = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "SA/IP/...，單一值"),
-                    DepartmentAbbr = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "IM/FM/...，單一值"),
-                    Type = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    TypeAbbr = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "P=Full Time, F=Part Time, C=Contractual"),
-                    EnglishName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Degree = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    DegreeYear = table.Column<decimal>(type: "decimal(4,0)", precision: 4, scale: 0, nullable: true),
-                    Department = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Responsibility = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "MT/RES/... 可以為多值，以逗點分割"),
-                    ImportSignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teachers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Teachers_ImportSignatures_ImportSignatureId",
-                        column: x => x.ImportSignatureId,
-                        principalSchema: "Catalog",
-                        principalTable: "ImportSignatures",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Courses",
                 schema: "Catalog",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DisciplineCode = table.Column<decimal>(type: "decimal(2,0)", precision: 2, scale: 0, nullable: true),
                     Semester = table.Column<decimal>(type: "decimal(5,0)", precision: 5, scale: 0, nullable: false),
-                    CourseCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CourseName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    CourseNameEng = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    TeacherName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    TeacherEnglishName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    CourseCredit = table.Column<decimal>(type: "decimal(6,4)", precision: 6, scale: 4, nullable: false),
-                    CourseRequired = table.Column<bool>(type: "bit", nullable: false, comment: "必修/選修"),
-                    CourseYear = table.Column<bool>(type: "bit", nullable: false, comment: "全半學年"),
-                    CourseTime = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false, comment: "節次，M1, T6, W3，以逗點分隔"),
-                    ImportSignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DisciplineId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Code = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    EnglishName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Credit = table.Column<decimal>(type: "decimal(6,4)", precision: 6, scale: 4, nullable: false),
+                    Required = table.Column<bool>(type: "bit", nullable: false, comment: "必修/選修"),
+                    Year = table.Column<bool>(type: "bit", nullable: false, comment: "全半學年"),
+                    Time = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false, comment: "節次，M1, T6, W3，以逗點分隔"),
+                    ImportSignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DisciplineId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -138,21 +100,75 @@ namespace Migrators.MSSQL.Migrations.Application
                         column: x => x.DisciplineId,
                         principalSchema: "Catalog",
                         principalTable: "Disciplines",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Courses_ImportSignatures_ImportSignatureId",
                         column: x => x.ImportSignatureId,
                         principalSchema: "Catalog",
                         principalTable: "ImportSignatures",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teachers",
+                schema: "Catalog",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Qualification = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "SA/IP/...，單一值"),
+                    DepartmentAbbr = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "IM/FM/...，單一值"),
+                    WorkType = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    WorkTypeAbbr = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "P=Full Time, F=Part Time, C=Contractual"),
+                    EnglishName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Degree = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    DegreeYear = table.Column<decimal>(type: "decimal(4,0)", precision: 4, scale: 0, nullable: true),
+                    Department = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Responsibility = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "MT/RES/... 可以為多值，以逗點分割"),
+                    ImportSignatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teachers_ImportSignatures_ImportSignatureId",
+                        column: x => x.ImportSignatureId,
+                        principalSchema: "Catalog",
+                        principalTable: "ImportSignatures",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseTeacher",
+                schema: "Catalog",
+                columns: table => new
+                {
+                    CoursesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeachersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseTeacher", x => new { x.CoursesId, x.TeachersId });
+                    table.ForeignKey(
+                        name: "FK_CourseTeacher_Courses_CoursesId",
+                        column: x => x.CoursesId,
+                        principalSchema: "Catalog",
+                        principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Courses_Teachers_TeacherId",
-                        column: x => x.TeacherId,
+                        name: "FK_CourseTeacher_Teachers_TeachersId",
+                        column: x => x.TeachersId,
                         principalSchema: "Catalog",
                         principalTable: "Teachers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -168,10 +184,10 @@ namespace Migrators.MSSQL.Migrations.Application
                 column: "ImportSignatureId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_TeacherId",
+                name: "IX_CourseTeacher_TeachersId",
                 schema: "Catalog",
-                table: "Courses",
-                column: "TeacherId");
+                table: "CourseTeacher",
+                column: "TeachersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teachers_ImportSignatureId",
@@ -183,15 +199,19 @@ namespace Migrators.MSSQL.Migrations.Application
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CourseTeacher",
+                schema: "Catalog");
+
+            migrationBuilder.DropTable(
                 name: "Courses",
                 schema: "Catalog");
 
             migrationBuilder.DropTable(
-                name: "Disciplines",
+                name: "Teachers",
                 schema: "Catalog");
 
             migrationBuilder.DropTable(
-                name: "Teachers",
+                name: "Disciplines",
                 schema: "Catalog");
 
             migrationBuilder.DropTable(
