@@ -1,8 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace AACSB.WebApi.Domain.Catalog;
+namespace AACSB.WebApi.Domain.ReportGenerator;
 
+[Table("Courses", Schema="ReportGenerator")]
 public class Course : AuditableEntity, IAggregateRoot
 {
     [Precision(5, 0)]
@@ -24,18 +27,12 @@ public class Course : AuditableEntity, IAggregateRoot
     public string Time { get; private set; }
 
     public Guid? ImportSignatureId { get; private set; }
-    public ImportSignature ImportSignature { get; private set; }
+    public ImportSignature? ImportSignature { get; private set; }
     public Guid? DisciplineId { get; private set; }
-    public Discipline Discipline { get; private set; }
+    public Discipline? Discipline { get; private set; }
     public ICollection<Teacher>? Teachers { get; private set; }
 
-    public Course()
-    {
-        // Only needed for working with dapper (See GetProductViaDapperRequest)
-        // If you're not using dapper it's better to remove this constructor.
-    }
-    public Course(decimal semester, string code, string name, string englishName,
-        decimal credit, bool required, bool year, string time)
+    public Course(decimal semester, string code, string name, string englishName, decimal credit, bool required, bool year, string time)
     {
         Semester = semester;
         Code = code;

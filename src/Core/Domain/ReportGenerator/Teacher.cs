@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace AACSB.WebApi.Domain.Catalog;
+namespace AACSB.WebApi.Domain.ReportGenerator;
 
+[Table("Teachers", Schema="ReportGenerator")]
 public class Teacher : AuditableEntity, IAggregateRoot
 {
     [MaxLength(80)]
@@ -31,13 +33,17 @@ public class Teacher : AuditableEntity, IAggregateRoot
     public string? Responsibility { get; private set; }
 
     public Guid? ImportSignatureId { get; private set; }
-    public ImportSignature ImportSignature { get; private set; }
+    public ImportSignature? ImportSignature { get; private set; }
     public ICollection<Course>? Courses { get; private set; }
 
-    public Teacher() {}
-    public Teacher(string name, string qualification, string departmentAbbr, string? workType, string? workTypeAbbr,
-        string? englishName, string? degree, decimal? degreeYear, string? department,
-        string? responsibility, Guid importSignatureId)
+    public Teacher(string name, string qualification, string departmentAbbr)
+    {
+        Name = name;
+        Qualification = qualification;
+        DepartmentAbbr = departmentAbbr;
+    }
+
+    public Teacher(string name, string qualification, string departmentAbbr, string? workType, string? workTypeAbbr, string? englishName, string? degree, decimal? degreeYear, string? department, string? responsibility, Guid importSignatureId)
     {
         Name = name;
         Qualification = qualification;

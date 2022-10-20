@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace AACSB.WebApi.Infrastructure.Persistence.Context;
 
-public class ApplicationDbContext : BaseDbContext
+public partial class ApplicationDbContext : BaseDbContext
 {
     public ApplicationDbContext(ITenantInfo currentTenant, DbContextOptions options, ICurrentUser currentUser, ISerializerService serializer, IOptions<DatabaseSettings> dbSettings, IEventPublisher events)
         : base(currentTenant, options, currentUser, serializer, dbSettings, events)
@@ -17,10 +17,6 @@ public class ApplicationDbContext : BaseDbContext
 
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Brand> Brands => Set<Brand>();
-    public DbSet<Course> Courses => Set<Course>();
-    public DbSet<Teacher> Teachers => Set<Teacher>();
-    public DbSet<Discipline> Disciplines => Set<Discipline>();
-    public DbSet<ImportSignature> ImportSignatures => Set<ImportSignature>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
