@@ -1,11 +1,11 @@
 using System.Reflection;
 using AACSB.WebApi.Application.Common.Interfaces;
-using AACSB.WebApi.Domain.Catalog;
+using AACSB.WebApi.Domain.ReportGenerator;
 using AACSB.WebApi.Infrastructure.Persistence.Context;
 using AACSB.WebApi.Infrastructure.Persistence.Initialization;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.Catalog;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator;
 
 public class DisciplineSeeder : ICustomSeeder
 {
@@ -27,7 +27,7 @@ public class DisciplineSeeder : ICustomSeeder
 
         _logger.LogInformation("Started to Seed Discipline.");
 
-        string disciplineData = await File.ReadAllTextAsync(path + "/Catalog/discipline.json", cancellationToken);
+        string disciplineData = await File.ReadAllTextAsync(path + "/ReportGenerator/discipline.json", cancellationToken);
 
         var disciplines = _serializerService.Deserialize<List<Discipline>>(disciplineData);
 
