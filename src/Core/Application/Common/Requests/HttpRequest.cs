@@ -30,27 +30,27 @@ public abstract class HttpRequest : IHttpRequest
         };
     }
 
-    public async Task<HttpResponseMessage> GetAsync(string path, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+    public Task<HttpResponseMessage> GetAsync(string path, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
     {
         string uri = GenerateUri(path, queryParams);
-        return await _client.GetAsync(uri, cancellationToken);
+        return _client.GetAsync(uri, cancellationToken);
     }
 
-    public async Task<HttpResponseMessage> PostAsync(string path, string? postData, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+    public Task<HttpResponseMessage> PostAsync(string path, string? postData, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
     {
         string uri = GenerateUri(path, queryParams);
         var contentPost = postData is null ? null : new StringContent(postData, Encoding.UTF8, "application/json");
 
-        return await _client.PostAsync(uri, contentPost, cancellationToken);
+        return _client.PostAsync(uri, contentPost, cancellationToken);
     }
 
-    public async Task<HttpResponseMessage> PostAsync<T>(string path, T? postData, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+    public Task<HttpResponseMessage> PostAsync<T>(string path, T? postData, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
     {
         string uri = GenerateUri(path, queryParams);
         string json = JsonSerializer.Serialize(postData);
         HttpContent contentPost = new StringContent(json, Encoding.UTF8, "application/json");
 
-        return await _client.PostAsync(uri, contentPost, cancellationToken);
+        return _client.PostAsync(uri, contentPost, cancellationToken);
     }
 
     private static string GenerateUri(string path, Dictionary<string, string>? queryParams)
