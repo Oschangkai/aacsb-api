@@ -8,6 +8,11 @@ public partial class ApplicationDbContext
     // Report Generator
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Teacher> Teachers => Set<Teacher>();
+    public DbSet<TeacherQualification> TeacherQualifications => Set<TeacherQualification>();
+    public DbSet<TeacherProfessional> TeacherProfessionals => Set<TeacherProfessional>();
+    public DbSet<TeacherResearch> TeacherResearch => Set<TeacherResearch>();
+    public DbSet<TeacherResponsibility> TeacherResponsibilities => Set<TeacherResponsibility>();
     public DbSet<Discipline> Disciplines => Set<Discipline>();
     public DbSet<ImportSignature> ImportSignatures => Set<ImportSignature>();
+    public DbSet<Department> Departments => Set<Department>();
 }
