@@ -68,8 +68,6 @@
     </ItemGroup>
     <ItemGroup>
         <None Update="Catalog\*.json" CopyToOutputDirectory="PreserveNewest" />
-        <None Update="ReportGenerator\discipline.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+        <None Update="ReportGenerator\*.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
