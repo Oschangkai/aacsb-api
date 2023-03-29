@@ -1,0 +1,32 @@
+[
+  {
+    "Description": "",
+    "EnglishDescription": "Instructional Practitioners",
+    "Abbreviation": "IP"
+  },
+  {
+    "Description": "",
+    "EnglishDescription": "Scholarly Academic",
+    "Abbreviation": "SA"
+  },
+  {
+    "Description": "",
+    "EnglishDescription": "Practice Academics",
+    "Abbreviation": "PA"
+  },
+  {
+    "Description": "",
+    "EnglishDescription": "Scholarly Practitioners",
+    "Abbreviation": "SP"
+  },
+  {
+    "Description": "",
+    "EnglishDescription": "Additional Faculty",
+    "Abbreviation": "A"
+  },
+  {
+    "Description": "以上皆非",
+    "EnglishDescription": "None of the above",
+    "Abbreviation": "NONE"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "Name": "科技管理所",
+    "EnglishName": "Technology Management",
+    "Abbreviation": "TM"
+  },
+  {
+    "Name": "企業管理系所",
+    "EnglishName": "Business Administration",
+    "Abbreviation": "BA"
+  },
+  {
+    "Name": "資訊管理系所",
+    "EnglishName": "Information Management",
+    "Abbreviation": "MI"
+  },
+  {
+    "Name": "管理學士班",
+    "EnglishName": "Management Undergraduate",
+    "Abbreviation": "MB"
+  },
+  {
+    "Name": "財務金融所",
+    "EnglishName": "Finance",
+    "Abbreviation": "FN"
+  },
+  {
+    "Name": "管理學院研究所",
+    "EnglishName": "MBA",
+    "Abbreviation": "MA"
+  },
+  {
+    "Name": "管理學院在職專班",
+    "EnglishName": "EMBA",
+    "Abbreviation": "MG"
+  },
+  {
+    "Name": "工業管理系所",
+    "EnglishName": "Industrial Management",
+    "Abbreviation": "IM"
+  },
+  {
+    "Name": "其他系所",
+    "EnglishName": "Others",
+    "Abbreviation": "OTHERS"
+  }
+]
