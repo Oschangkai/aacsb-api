@@ -27,7 +27,15 @@ $ dotnet ef migrations add <CommitMessage> \
     -o Migrations/Application \
     --startup-project ./src/Host
 # revert
-$ dotnet ef database update <previous-migration-name>
+$ dotnet ef database update <previous-migration-name> \
+    --startup-project ./src/Host \
+    --context ApplicationDbContext
+    
+# remove
+$ dotnet ef migrations remove \
+    --project ./src/Migrators/Migrators.<DBProvider>/ \
+    --startup-project ./src/Host \
+    --context ApplicationDbContext
 ```
 
 ## Environment Variables
