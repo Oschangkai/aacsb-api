@@ -35,4 +35,12 @@ public interface IJobService : ITransientService
     bool Requeue(string jobId);
 
     bool Requeue(string jobId, string fromState);
+
+    public string ContinueJobWith(string jobId, Expression<Func<Task>> methodCall);
+
+    public string ContinueJobWith(string jobId, Expression<Action> methodCall);
+
+    public string ContinueJobWith<T>(string jobId, Expression<Action<T>> methodCall);
+
+    public string ContinueJobWith<T>(string jobId, Expression<Func<T, Task>> methodCall);
 }
