@@ -32,7 +32,7 @@
     },
     "Credentials": {
       "User": "Admin",
-      "Password": "S3(r3tP@55w0rd"
+      "Password": "hangfire$uperP@$$w0rd"
     }
   }
 }

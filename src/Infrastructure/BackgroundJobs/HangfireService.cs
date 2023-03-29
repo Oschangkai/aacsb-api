@@ -30,6 +30,18 @@ public class HangfireService : IJobService
     public bool Requeue(string jobId, string fromState) =>
         BackgroundJob.Requeue(jobId, fromState);
 
+    public string ContinueJobWith(string jobId, Expression<Func<Task>> methodCall) =>
+        BackgroundJob.ContinueJobWith(jobId, methodCall);
+
+    public string ContinueJobWith(string jobId, Expression<Action> methodCall) =>
+        BackgroundJob.ContinueJobWith(jobId, methodCall);
+
+    public string ContinueJobWith<T>(string jobId, Expression<Action<T>> methodCall) =>
+        BackgroundJob.ContinueJobWith(jobId, methodCall);
+
+    public string ContinueJobWith<T>(string jobId, Expression<Func<T, Task>> methodCall) =>
+        BackgroundJob.ContinueJobWith(jobId, methodCall);
+
     public string Schedule(Expression<Action> methodCall, TimeSpan delay) =>
         BackgroundJob.Schedule(methodCall, delay);
 
