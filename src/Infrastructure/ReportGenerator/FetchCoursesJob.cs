@@ -63,6 +63,9 @@ public class FetchCoursesJob : IFetchCourseJob
     {
         if (department.Length <= 0) return;
 
+        // Task1: Fetch courses
+
+
         await NotifyAsync($"Fetch courses started: {year}, {semester}, {department}", 0, cancellationToken);
     }
 }

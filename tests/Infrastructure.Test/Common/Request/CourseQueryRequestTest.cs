@@ -1,4 +1,4 @@
-using AACSB.WebApi.Infrastructure.Common.Request;
+using AACSB.WebApi.Infrastructure.ReportGenerator.Request;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;

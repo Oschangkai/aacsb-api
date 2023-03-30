@@ -3,7 +3,7 @@ using AACSB.WebApi.Application.Common.Exceptions;
 using AACSB.WebApi.Application.Common.Requests;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.Common.Request;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator.Request;
 
 public class CourseQueryRequest : HttpRequest
 {
