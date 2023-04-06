@@ -16,7 +16,7 @@ public class CourseQueryRequestTest
         _output = output;
 
         var logger = Mock.Of<ILogger<CourseQueryRequest>>();
-        _query = new CourseQueryRequest(logger);
+        _query = new CourseQueryRequest();
     }
 
     [Fact]
