@@ -5,7 +5,7 @@ using AACSB.WebApi.Infrastructure.Persistence.Context;
 using AACSB.WebApi.Infrastructure.Persistence.Initialization;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.ReportGenerator;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator.Seeders;
 
 public class TeacherResponsibilitySeeder : ICustomSeeder
 {
@@ -23,23 +23,23 @@ public class TeacherResponsibilitySeeder : ICustomSeeder
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        if (_db.TeacherResponsibilities.Any()) return;
+        if (_db.Responsibilities.Any()) return;
 
-        _logger.LogInformation("Started to Seed Teacher Responsibility.");
+        _logger.LogInformation("Started to Seed Responsibilities.");
 
-        string responsibilityData = await File.ReadAllTextAsync(path + "/ReportGenerator/responsibility.json", cancellationToken);
+        string responsibilityData = await File.ReadAllTextAsync(path + "/ReportGenerator/Seeders/responsibility.json", cancellationToken);
 
-        var responsibilities = _serializerService.Deserialize<List<TeacherResponsibility>>(responsibilityData);
+        var responsibilities = _serializerService.Deserialize<List<Responsibility>>(responsibilityData);
 
         if (responsibilities is { Count: > 0 })
         {
             foreach (var responsibility in responsibilities)
             {
-                await _db.TeacherResponsibilities.AddAsync(responsibility, cancellationToken);
+                await _db.Responsibilities.AddAsync(responsibility, cancellationToken);
             }
         }
 
         await _db.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Seeded Teacher Responsibility.");
+        _logger.LogInformation("Seeded Responsibilities.");
     }
 }

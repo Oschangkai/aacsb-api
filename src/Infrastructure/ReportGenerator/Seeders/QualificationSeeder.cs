@@ -5,7 +5,7 @@ using AACSB.WebApi.Infrastructure.Persistence.Context;
 using AACSB.WebApi.Infrastructure.Persistence.Initialization;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.ReportGenerator;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator.Seeders;
 
 public class TeacherQualificationSeeder : ICustomSeeder
 {
@@ -23,23 +23,23 @@ public class TeacherQualificationSeeder : ICustomSeeder
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        if (_db.TeacherQualifications.Any()) return;
+        if (_db.Qualifications.Any()) return;
 
-        _logger.LogInformation("Started to Seed Teacher Qualification.");
+        _logger.LogInformation("Started to Seed Qualifications.");
 
-        string qualificationData = await File.ReadAllTextAsync(path + "/ReportGenerator/qualification.json", cancellationToken);
+        string qualificationData = await File.ReadAllTextAsync(path + "/ReportGenerator/Seeders/qualification.json", cancellationToken);
 
-        var qualifications = _serializerService.Deserialize<List<TeacherQualification>>(qualificationData);
+        var qualifications = _serializerService.Deserialize<List<Qualification>>(qualificationData);
 
         if (qualifications is { Count: > 0 })
         {
             foreach (var qualification in qualifications)
             {
-                await _db.TeacherQualifications.AddAsync(qualification, cancellationToken);
+                await _db.Qualifications.AddAsync(qualification, cancellationToken);
             }
         }
 
         await _db.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Seeded Teacher Qualifications.");
+        _logger.LogInformation("Seeded Qualifications.");
     }
 }

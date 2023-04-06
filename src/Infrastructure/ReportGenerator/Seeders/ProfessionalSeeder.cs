@@ -5,15 +5,15 @@ using AACSB.WebApi.Infrastructure.Persistence.Context;
 using AACSB.WebApi.Infrastructure.Persistence.Initialization;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.ReportGenerator;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator.Seeders;
 
-public class TeacherProfessionalSeeder : ICustomSeeder
+public class ProfessionalSeeder : ICustomSeeder
 {
     private readonly ISerializerService _serializerService;
     private readonly ApplicationDbContext _db;
-    private readonly ILogger<TeacherProfessionalSeeder> _logger;
+    private readonly ILogger<ProfessionalSeeder> _logger;
 
-    public TeacherProfessionalSeeder(ISerializerService serializerService, ILogger<TeacherProfessionalSeeder> logger, ApplicationDbContext db)
+    public ProfessionalSeeder(ISerializerService serializerService, ILogger<ProfessionalSeeder> logger, ApplicationDbContext db)
     {
         _serializerService = serializerService;
         _logger = logger;
@@ -23,23 +23,23 @@ public class TeacherProfessionalSeeder : ICustomSeeder
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        if (_db.TeacherProfessionals.Any()) return;
+        if (_db.Professionals.Any()) return;
 
-        _logger.LogInformation("Started to Seed Teacher Professional.");
+        _logger.LogInformation("Started to Seed Professionals.");
 
-        string professionalData = await File.ReadAllTextAsync(path + "/ReportGenerator/professional.json", cancellationToken);
+        string professionalData = await File.ReadAllTextAsync(path + "/ReportGenerator/Seeders/professional.json", cancellationToken);
 
-        var professionals = _serializerService.Deserialize<List<TeacherProfessional>>(professionalData);
+        var professionals = _serializerService.Deserialize<List<Professional>>(professionalData);
 
         if (professionals is { Count: > 0 })
         {
             foreach (var professional in professionals)
             {
-                await _db.TeacherProfessionals.AddAsync(professional, cancellationToken);
+                await _db.Professionals.AddAsync(professional, cancellationToken);
             }
         }
 
         await _db.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Seeded Teacher Professionals.");
+        _logger.LogInformation("Seeded Professionals.");
     }
 }

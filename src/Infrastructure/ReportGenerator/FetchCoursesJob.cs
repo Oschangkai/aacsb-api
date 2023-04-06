@@ -1,7 +1,11 @@
+using System.Text.Json;
 using AACSB.WebApi.Application.Common.Interfaces;
 using AACSB.WebApi.Application.Common.Persistence;
 using AACSB.WebApi.Application.ReportGenerator;
 using AACSB.WebApi.Domain.ReportGenerator;
+using AACSB.WebApi.Infrastructure.ReportGenerator.Request;
+using AACSB.WebApi.Infrastructure.ReportGenerator.Request.Model;
+using AACSB.WebApi.Infrastructure.ReportGenerator.Specifications;
 using AACSB.WebApi.Shared.Notifications;
 using Hangfire;
 using Hangfire.Console.Extensions;
@@ -16,8 +20,10 @@ public class FetchCoursesJob : IFetchCourseJob
 {
     private readonly ILogger<FetchCoursesJob> _logger;
     private readonly ISender _mediator;
-    private readonly IReadRepository<Course> _courseRepo;
-    private readonly IReadRepository<Teacher> _teacherRepo;
+    private readonly IRepositoryWithEvents<Course> _courseRepo;
+    private readonly IRepositoryWithEvents<Teacher> _teacherRepo;
+    private readonly IReadRepository<Department> _departmentRepo;
+    private readonly IRepositoryWithEvents<ImportSignature> _importSignatureRepo;
     private readonly IProgressBarFactory _progressBar;
     private readonly PerformingContext _performingContext;
     private readonly INotificationSender _notifications;
@@ -26,8 +32,10 @@ public class FetchCoursesJob : IFetchCourseJob
     public FetchCoursesJob(
         ILogger<FetchCoursesJob> logger,
         ISender mediator,
-        IReadRepository<Course> courseRepo,
-        IReadRepository<Teacher> teacherRepo,
+        IRepositoryWithEvents<Course> courseRepo,
+        IRepositoryWithEvents<Teacher> teacherRepo,
+        IReadRepository<Department> departmentRepo,
+        IRepositoryWithEvents<ImportSignature> importSignatureRepo,
         IProgressBarFactory progressBar,
         PerformingContext performingContext,
         INotificationSender notifications,
@@ -37,6 +45,8 @@ public class FetchCoursesJob : IFetchCourseJob
         _mediator = mediator;
         _courseRepo = courseRepo;
         _teacherRepo = teacherRepo;
+        _departmentRepo = departmentRepo;
+        _importSignatureRepo = importSignatureRepo;
         _progressBar = progressBar;
         _performingContext = performingContext;
         _notifications = notifications;
@@ -59,13 +69,77 @@ public class FetchCoursesJob : IFetchCourseJob
     }
 
     [Queue("notdefault")]
-    public async Task FetchAsync(int year, int semester, string[] department, CancellationToken cancellationToken)
+    public async Task FetchAsync(int year, int semester, string[] departments, CancellationToken cancellationToken)
     {
-        if (department.Length <= 0) return;
+        // Task1: If department not provided, fetch all departments related to 管院
+        if (departments.Length <= 0)
+        {
+            departments = (await _departmentRepo.ListAsync(new DepartmentAbbrListSpec(), cancellationToken)).ToArray();
+        }
 
-        // Task1: Fetch courses
+        // Task2: Create Import Signature
+        var importSignature = new ImportSignature()
+        {
+            Name = $"{DateTime.UtcNow:yyyyMMdd-HHmmss}-auto",
+            Description = $"Auto generated. {DateTime.UtcNow:O}"
+        };
+        var signature = await _importSignatureRepo.AddAsync(importSignature, cancellationToken);
+        if (signature == null) throw new ArgumentNullException(nameof(signature));
+
+        // Task3: Fetch courses
+        _logger.LogInformation($"{departments.Length} departments found: {string.Join(", ", departments)}");
+        await NotifyAsync($"Fetch courses started: {year}{semester}, {departments} with signature {importSignature.Name}", 0, cancellationToken);
+
+        var request = new CourseQueryRequest();
+        var courseList = new List<Course>();
+
+        foreach (var dept in departments)
+        {
+            var department = await _departmentRepo.GetBySpecAsync(new GetDepartmentByAbbrSpec(dept), cancellationToken);
+            _logger.LogInformation($"Fetch courses: {year}{semester}, {dept} with signature {importSignature.Name}");
+
+            // Task3.1: Fetch Chinese and English course
+            var (chineseCourseString, englishCourseString) = await request.GetCourseByDepartment($"{year}{semester}", dept, cancellationToken);
+            var chineseCourses = JsonSerializer.Deserialize<List<CourseResponse>>(await chineseCourseString);
+            var englishCourses = JsonSerializer.Deserialize<List<CourseResponse>>(await englishCourseString);
+
+            // Task3.2: Merge Chinese and English course
+            var courses =
+                from cc in chineseCourses
+                join ec in englishCourses on cc.CourseNo equals ec.CourseNo
+                select new Course()
+                {
+                    Semester = Convert.ToDecimal($"{year}{semester}"),
+                    Code = cc.CourseNo,
+                    Name = cc.CourseName,
+                    EnglishName = ec.CourseName,
+                    DepartmentId = department.Id,
+                    Credit = Convert.ToDecimal(cc.CreditPoint),
+                    Required = cc.RequireOption == "R", // Required = R, Not required = E
+                    Year = cc.AllYear == "F", // Full Year = F, Half Year = H
+                    Time = cc.CourseTimes,
+                    ClassRoomNo = cc.ClassRoomNo,
+                    Contents = cc.Contents,
+                    ImportSignatureId = signature.Id,
+                    Teachers = cc.CourseTeacher.Contains(',')
+                        ? cc.CourseTeacher.Split(',')
+                            .Select((t, i) => new Teacher()
+                            {
+                                Name = t,
+                                EnglishName = ec.CourseTeacher.Split(',')[i]
+                            }).ToList()
+                        : new List<Teacher>() { new Teacher() { Name = cc.CourseTeacher, EnglishName = ec.CourseTeacher} }
+                };
+
+            var cl = courses.ToList();
+            _logger.LogInformation($"{cl.Count()} courses will be inserted.");
+            courseList.AddRange(cl);
+        }
 
 
-        await NotifyAsync($"Fetch courses started: {year}, {semester}, {department}", 0, cancellationToken);
+        // Task4: Insert courses
+        _logger.LogInformation($"({year}{semester}) semester has {courseList.Count} courses will be inserted with signature {importSignature.Name}");
+        await _courseRepo.AddRangeAsync(courseList, cancellationToken);
     }
 }
+
