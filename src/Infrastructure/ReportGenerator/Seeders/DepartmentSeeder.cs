@@ -5,7 +5,7 @@ using AACSB.WebApi.Infrastructure.Persistence.Context;
 using AACSB.WebApi.Infrastructure.Persistence.Initialization;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.ReportGenerator;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator.Seeders;
 
 public class DepartmentSeeder : ICustomSeeder
 {
@@ -27,7 +27,7 @@ public class DepartmentSeeder : ICustomSeeder
 
         _logger.LogInformation("Started to Seed Department.");
 
-        string departmentData = await File.ReadAllTextAsync(path + "/ReportGenerator/department.json", cancellationToken);
+        string departmentData = await File.ReadAllTextAsync(path + "/ReportGenerator/Seeders/department.json", cancellationToken);
 
         var departments = _serializerService.Deserialize<List<Department>>(departmentData);
 

@@ -5,7 +5,7 @@ using AACSB.WebApi.Infrastructure.Persistence.Context;
 using AACSB.WebApi.Infrastructure.Persistence.Initialization;
 using Microsoft.Extensions.Logging;
 
-namespace AACSB.WebApi.Infrastructure.ReportGenerator;
+namespace AACSB.WebApi.Infrastructure.ReportGenerator.Seeders;
 
 public class TeacherResearchSeeder : ICustomSeeder
 {
@@ -23,23 +23,23 @@ public class TeacherResearchSeeder : ICustomSeeder
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         string? path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        if (_db.TeacherResearch.Any()) return;
+        if (_db.Research.Any()) return;
 
-        _logger.LogInformation("Started to Seed Teacher Research.");
+        _logger.LogInformation("Started to Seed Research.");
 
-        string researchData = await File.ReadAllTextAsync(path + "/ReportGenerator/research.json", cancellationToken);
+        string researchData = await File.ReadAllTextAsync(path + "/ReportGenerator/Seeders/research.json", cancellationToken);
 
-        var research = _serializerService.Deserialize<List<TeacherResearch>>(researchData);
+        var research = _serializerService.Deserialize<List<Research>>(researchData);
 
         if (research is { Count: > 0 })
         {
             foreach (var r in research)
             {
-                await _db.TeacherResearch.AddAsync(r, cancellationToken);
+                await _db.Research.AddAsync(r, cancellationToken);
             }
         }
 
         await _db.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Seeded Teacher Research.");
+        _logger.LogInformation("Seeded Research.");
     }
 }

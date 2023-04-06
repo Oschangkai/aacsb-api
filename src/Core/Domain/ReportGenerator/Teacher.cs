@@ -12,7 +12,7 @@ public class Teacher : AuditableEntity, IAggregateRoot
 
     [Comment("SA/IP/...，單一值")]
     [MaxLength(10)]
-    public string Qualification { get; set; }
+    public Qualification? Qualification { get; set; }
 
     [MaxLength(15)]
     public string? WorkType { get; set; }
@@ -35,7 +35,7 @@ public class Teacher : AuditableEntity, IAggregateRoot
 
     [Comment("MT/RES/... 可以為多值")]
     [MaxLength(100)]
-    public ICollection<TeacherResponsibility>? Responsibilities { get; set; }
+    public ICollection<Responsibility>? Responsibilities { get; set; }
 
     [Comment("Email")]
     [MaxLength(80)]
@@ -46,18 +46,12 @@ public class Teacher : AuditableEntity, IAggregateRoot
     public string? Title { get; set; }
 
     [Comment("學術研究相關")]
-    public ICollection<TeacherResearch>? Research { get; set; }
+    public ICollection<Research>? Research { get; set; }
 
     [Comment("專業領域相關")]
-    public ICollection<TeacherProfessional>? Professional { get; set; }
+    public ICollection<Professional>? Professional { get; set; }
 
     public Guid? ImportSignatureId { get; set; }
     public ImportSignature? ImportSignature { get; set; }
     public ICollection<Course>? Courses { get; set; }
-
-    public Teacher(string name, string qualification)
-    {
-        Name = name;
-        Qualification = qualification;
-    }
 }

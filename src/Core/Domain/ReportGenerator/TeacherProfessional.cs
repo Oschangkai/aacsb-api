@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using MassTransit;
 
 namespace AACSB.WebApi.Domain.ReportGenerator;
 
 [Table("TeacherProfessionals", Schema="ReportGenerator")]
-public class TeacherProfessional : AuditableEntity, IAggregateRoot
+public class TeacherProfessional : BaseEntity
 {
-    public string? Description { get; set; }
+    public Guid TeacherId { get; set; }
+    public Teacher Teacher { get; set; }
 
-    public string? EnglishDescription { get; set; }
-
-    public Guid? TeacherId { get; set; }
+    public Guid ProfessionalId { get; set; }
+    public Professional Professional { get; set; }
 }
