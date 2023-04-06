@@ -1,16 +1,17 @@
 using System.Net;
+using System.Text.Json;
 using AACSB.WebApi.Application.Common.Exceptions;
 using AACSB.WebApi.Application.Common.Requests;
-using Microsoft.Extensions.Logging;
+using AACSB.WebApi.Infrastructure.ReportGenerator.Request.Model;
 
 namespace AACSB.WebApi.Infrastructure.ReportGenerator.Request;
 
 public class CourseQueryRequest : HttpRequest
 {
-    private ILogger<HttpRequest> Logger { get; }
-
-    public CourseQueryRequest(ILogger<CourseQueryRequest> logger)
-        : base(baseAddress: "https://querycourse.ntust.edu.tw/", null, null, logger: logger) => Logger = logger;
+    public CourseQueryRequest()
+        : base(baseAddress: "https://querycourse.ntust.edu.tw/", null, null)
+    {
+    }
 
     public async Task<(Task<string> ChCourses, Task<string> EnCourses)> GetCourseByDepartment(string semester, string department, CancellationToken cancellationToken)
     {

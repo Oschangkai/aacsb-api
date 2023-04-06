@@ -12,9 +12,7 @@ public abstract class HttpRequest : IHttpRequest
     private string _mediaType = "application/json";
     private string _token = string.Empty;
 
-    private ILogger<HttpRequest> Logger { get; }
-
-    protected HttpRequest(string? baseAddress, string? mediaType, string? token, ILogger<HttpRequest> logger)
+    protected HttpRequest(string? baseAddress, string? mediaType, string? token)
     {
         if (baseAddress is not null)
             _baseAddress = baseAddress;
@@ -22,7 +20,6 @@ public abstract class HttpRequest : IHttpRequest
             _mediaType = mediaType;
         if (token is not null)
             this._token = token;
-        Logger = logger;
 
         _client = new HttpClient()
         {
