@@ -39,7 +39,7 @@ public class CourseQueryRequest : HttpRequest
         }
 
         var courseEn = (await queryEnTask).Content.ReadAsStringAsync(cancellationToken);
-        var courseCh = (await queryEnTask).Content.ReadAsStringAsync(cancellationToken);
+        var courseCh = (await queryChTask).Content.ReadAsStringAsync(cancellationToken);
         return (ChCourses: courseCh, EnCourses: courseEn);
     }
 }
