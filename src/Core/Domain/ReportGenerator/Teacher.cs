@@ -24,6 +24,9 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [MaxLength(200)]
     public string? EnglishName { get; set; }
 
+    [MaxLength(200)]
+    public string? EnglishNameInNtustCourse { get; set; }
+
     [MaxLength(10)]
     public string? Degree { get; set; }
 
@@ -53,5 +56,6 @@ public class Teacher : AuditableEntity, IAggregateRoot
 
     public Guid? ImportSignatureId { get; set; }
     public ImportSignature? ImportSignature { get; set; }
-    public ICollection<Course>? Courses { get; set; }
+
+    public ICollection<CourseTeacher>? Courses { get; set; }
 }

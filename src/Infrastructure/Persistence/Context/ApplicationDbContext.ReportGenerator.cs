@@ -9,7 +9,6 @@ public partial class ApplicationDbContext
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Teacher> Teachers => Set<Teacher>();
 
-    public DbSet<TeacherQualification> TeacherQualifications => Set<TeacherQualification>();
     public DbSet<Qualification> Qualifications => Set<Qualification>();
     public DbSet<TeacherProfessional> TeacherProfessionals => Set<TeacherProfessional>();
 
