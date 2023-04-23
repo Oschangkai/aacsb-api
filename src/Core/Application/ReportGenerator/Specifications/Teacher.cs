@@ -8,3 +8,9 @@ public class GetTeacherByChineseNameSpec : Specification<Teacher, Teacher>
     public GetTeacherByChineseNameSpec(string name) =>
         Query.Where(t => t.Name == name);
 }
+
+public class GetTeacherByNameSpec : Specification<Teacher, Teacher>
+{
+    public GetTeacherByNameSpec(string name, string englishName, Guid importId) =>
+        Query.Where(t => t.Name == name && t.EnglishNameInNtustCourse == englishName && t.ImportSignatureId == importId);
+}

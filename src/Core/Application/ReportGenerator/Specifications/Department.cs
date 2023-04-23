@@ -1,5 +1,4 @@
 using AACSB.WebApi.Domain.ReportGenerator;
-using Ardalis.Specification;
 
 namespace AACSB.WebApi.Infrastructure.ReportGenerator.Specifications;
 
