@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AACSB.WebApi.Domain.ReportGenerator;
 
-[Table("_Responsibilities", Schema="ReportGenerator")]
+[Table("Responsibilities", Schema="ReportGenerator")]
 public class Responsibility : AuditableEntity, IAggregateRoot
 {
     [MaxLength(80)]

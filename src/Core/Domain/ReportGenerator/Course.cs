@@ -47,7 +47,8 @@ public class Course : AuditableEntity, IAggregateRoot
     public ImportSignature? ImportSignature { get; set; }
     public Guid? DisciplineId { get; set; }
     public Discipline? Discipline { get; set; }
-    public ICollection<Teacher>? Teachers { get; set; }
+
+    public ICollection<CourseTeacher>? Teachers { get; set; }
 
     public Course()
     {

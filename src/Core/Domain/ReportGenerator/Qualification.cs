@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AACSB.WebApi.Domain.ReportGenerator;
 
-[Table("_Qualifications", Schema="ReportGenerator")]
+[Table("Qualifications", Schema="ReportGenerator")]
 public class Qualification : AuditableEntity, IAggregateRoot
 {
     [MaxLength(80)]

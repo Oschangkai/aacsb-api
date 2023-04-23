@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AACSB.WebApi.Domain.ReportGenerator;
 
-[Table("_Research", Schema="ReportGenerator")]
+[Table("Research", Schema="ReportGenerator")]
 public class Research : AuditableEntity, IAggregateRoot
 {
     public string? Description { get; set; }
