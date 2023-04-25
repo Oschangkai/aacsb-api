@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace AACSB.WebApi.Domain.ReportGenerator;
 
+[Table("CourseTeacher", Schema="ReportGenerator")]
 public class CourseTeacher : BaseEntity
 {
     public Guid CourseId { get; set; }
