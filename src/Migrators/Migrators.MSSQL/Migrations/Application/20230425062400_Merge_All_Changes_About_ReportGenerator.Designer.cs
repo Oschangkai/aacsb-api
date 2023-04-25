@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrators.MSSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230423152523_Merge_All_Changes_About_ReportGenerator")]
+    [Migration("20230425062400_Merge_All_Changes_About_ReportGenerator")]
     partial class Merge_All_Changes_About_ReportGenerator
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,7 +241,7 @@ namespace Migrators.MSSQL.Migrations.Application
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("CourseTeacher", "Catalog");
+                    b.ToTable("CourseTeacher", "ReportGenerator");
                 });
 
             modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.Department", b =>
@@ -598,8 +598,16 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
+                    b.Property<string>("NameInNtustCourse")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<Guid?>("QualificationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ResignDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("離職日期");
 
                     b.Property<string>("TenantId")
                         .IsRequired()
@@ -631,69 +639,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.ToTable("Teachers", "ReportGenerator");
 
                     b.HasAnnotation("Finbuckle:MultiTenant", true);
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.TeacherProfessional", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProfessionalId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessionalId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherProfessionals", "ReportGenerator");
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.TeacherResearch", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ResearchId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResearchId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherResearch", "ReportGenerator");
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.TeacherResponsibility", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ResponsibilityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResponsibilityId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherResponsibilities", "ReportGenerator");
                 });
 
             modelBuilder.Entity("AACSB.WebApi.Infrastructure.Auditing.Trail", b =>
@@ -1116,63 +1061,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Navigation("ImportSignature");
 
                     b.Navigation("Qualification");
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.TeacherProfessional", b =>
-                {
-                    b.HasOne("AACSB.WebApi.Domain.ReportGenerator.Professional", "Professional")
-                        .WithMany()
-                        .HasForeignKey("ProfessionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AACSB.WebApi.Domain.ReportGenerator.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Professional");
-
-                    b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.TeacherResearch", b =>
-                {
-                    b.HasOne("AACSB.WebApi.Domain.ReportGenerator.Research", "Research")
-                        .WithMany()
-                        .HasForeignKey("ResearchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AACSB.WebApi.Domain.ReportGenerator.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Research");
-
-                    b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.TeacherResponsibility", b =>
-                {
-                    b.HasOne("AACSB.WebApi.Domain.ReportGenerator.Responsibility", "Responsibility")
-                        .WithMany()
-                        .HasForeignKey("ResponsibilityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AACSB.WebApi.Domain.ReportGenerator.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Responsibility");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("AACSB.WebApi.Infrastructure.Identity.ApplicationRoleClaim", b =>

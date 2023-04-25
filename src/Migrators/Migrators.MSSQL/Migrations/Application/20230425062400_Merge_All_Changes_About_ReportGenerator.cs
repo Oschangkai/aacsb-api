@@ -44,27 +44,21 @@ namespace Migrators.MSSQL.Migrations.Application
                 schema: "ReportGenerator",
                 table: "Teachers");
 
-            migrationBuilder.RenameTable(
-                name: "CourseTeacher",
-                schema: "ReportGenerator",
-                newName: "CourseTeacher",
-                newSchema: "Catalog");
-
             migrationBuilder.RenameColumn(
                 name: "TeachersId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher",
                 newName: "TeacherId");
 
             migrationBuilder.RenameColumn(
                 name: "CoursesId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher",
                 newName: "CourseId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_CourseTeacher_TeachersId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher",
                 newName: "IX_CourseTeacher_TeacherId");
 
@@ -92,12 +86,28 @@ namespace Migrators.MSSQL.Migrations.Application
                 maxLength: 200,
                 nullable: true);
 
+            migrationBuilder.AddColumn<string>(
+                name: "NameInNtustCourse",
+                schema: "ReportGenerator",
+                table: "Teachers",
+                type: "nvarchar(200)",
+                maxLength: 200,
+                nullable: true);
+
             migrationBuilder.AddColumn<Guid>(
                 name: "QualificationId",
                 schema: "ReportGenerator",
                 table: "Teachers",
                 type: "uniqueidentifier",
                 nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "ResignDate",
+                schema: "ReportGenerator",
+                table: "Teachers",
+                type: "datetime2",
+                nullable: true,
+                comment: "離職日期");
 
             migrationBuilder.AddColumn<string>(
                 name: "Title",
@@ -107,6 +117,14 @@ namespace Migrators.MSSQL.Migrations.Application
                 maxLength: 80,
                 nullable: true,
                 comment: "職稱");
+
+            migrationBuilder.AddColumn<Guid>(
+                name: "Id",
+                schema: "ReportGenerator",
+                table: "CourseTeacher",
+                type: "uniqueidentifier",
+                nullable: false,
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<string>(
                 name: "ClassRoomNo",
@@ -133,17 +151,9 @@ namespace Migrators.MSSQL.Migrations.Application
                 type: "uniqueidentifier",
                 nullable: true);
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "Id",
-                schema: "Catalog",
-                table: "CourseTeacher",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
-
             migrationBuilder.AddPrimaryKey(
                 name: "PK_CourseTeacher",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher",
                 column: "Id");
 
@@ -271,90 +281,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "TeacherProfessionals",
-                schema: "ReportGenerator",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProfessionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherProfessionals", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TeacherProfessionals_Professionals_ProfessionalId",
-                        column: x => x.ProfessionalId,
-                        principalSchema: "ReportGenerator",
-                        principalTable: "Professionals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TeacherProfessionals_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalSchema: "ReportGenerator",
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TeacherResearch",
-                schema: "ReportGenerator",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ResearchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherResearch", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TeacherResearch_Research_ResearchId",
-                        column: x => x.ResearchId,
-                        principalSchema: "ReportGenerator",
-                        principalTable: "Research",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TeacherResearch_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalSchema: "ReportGenerator",
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TeacherResponsibilities",
-                schema: "ReportGenerator",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ResponsibilityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherResponsibilities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TeacherResponsibilities_Responsibilities_ResponsibilityId",
-                        column: x => x.ResponsibilityId,
-                        principalSchema: "ReportGenerator",
-                        principalTable: "Responsibilities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TeacherResponsibilities_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalSchema: "ReportGenerator",
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Teachers_DepartmentId",
                 schema: "ReportGenerator",
@@ -368,16 +294,16 @@ namespace Migrators.MSSQL.Migrations.Application
                 column: "QualificationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CourseTeacher_CourseId",
+                schema: "ReportGenerator",
+                table: "CourseTeacher",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Courses_DepartmentId",
                 schema: "ReportGenerator",
                 table: "Courses",
                 column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourseTeacher_CourseId",
-                schema: "Catalog",
-                table: "CourseTeacher",
-                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Professionals_TeacherId",
@@ -397,42 +323,6 @@ namespace Migrators.MSSQL.Migrations.Application
                 table: "Responsibilities",
                 column: "TeacherId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherProfessionals_ProfessionalId",
-                schema: "ReportGenerator",
-                table: "TeacherProfessionals",
-                column: "ProfessionalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherProfessionals_TeacherId",
-                schema: "ReportGenerator",
-                table: "TeacherProfessionals",
-                column: "TeacherId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherResearch_ResearchId",
-                schema: "ReportGenerator",
-                table: "TeacherResearch",
-                column: "ResearchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherResearch_TeacherId",
-                schema: "ReportGenerator",
-                table: "TeacherResearch",
-                column: "TeacherId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherResponsibilities_ResponsibilityId",
-                schema: "ReportGenerator",
-                table: "TeacherResponsibilities",
-                column: "ResponsibilityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherResponsibilities_TeacherId",
-                schema: "ReportGenerator",
-                table: "TeacherResponsibilities",
-                column: "TeacherId");
-
             migrationBuilder.AddForeignKey(
                 name: "FK_Courses_Departments_DepartmentId",
                 schema: "ReportGenerator",
@@ -444,7 +334,7 @@ namespace Migrators.MSSQL.Migrations.Application
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CourseTeacher_Courses_CourseId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher",
                 column: "CourseId",
                 principalSchema: "ReportGenerator",
@@ -454,7 +344,7 @@ namespace Migrators.MSSQL.Migrations.Application
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CourseTeacher_Teachers_TeacherId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher",
                 column: "TeacherId",
                 principalSchema: "ReportGenerator",
@@ -490,12 +380,12 @@ namespace Migrators.MSSQL.Migrations.Application
 
             migrationBuilder.DropForeignKey(
                 name: "FK_CourseTeacher_Courses_CourseId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_CourseTeacher_Teachers_TeacherId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher");
 
             migrationBuilder.DropForeignKey(
@@ -513,23 +403,11 @@ namespace Migrators.MSSQL.Migrations.Application
                 schema: "ReportGenerator");
 
             migrationBuilder.DropTable(
-                name: "Qualifications",
-                schema: "ReportGenerator");
-
-            migrationBuilder.DropTable(
-                name: "TeacherProfessionals",
-                schema: "ReportGenerator");
-
-            migrationBuilder.DropTable(
-                name: "TeacherResearch",
-                schema: "ReportGenerator");
-
-            migrationBuilder.DropTable(
-                name: "TeacherResponsibilities",
-                schema: "ReportGenerator");
-
-            migrationBuilder.DropTable(
                 name: "Professionals",
+                schema: "ReportGenerator");
+
+            migrationBuilder.DropTable(
+                name: "Qualifications",
                 schema: "ReportGenerator");
 
             migrationBuilder.DropTable(
@@ -550,20 +428,20 @@ namespace Migrators.MSSQL.Migrations.Application
                 schema: "ReportGenerator",
                 table: "Teachers");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Courses_DepartmentId",
-                schema: "ReportGenerator",
-                table: "Courses");
-
             migrationBuilder.DropPrimaryKey(
                 name: "PK_CourseTeacher",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher");
 
             migrationBuilder.DropIndex(
                 name: "IX_CourseTeacher_CourseId",
-                schema: "Catalog",
+                schema: "ReportGenerator",
                 table: "CourseTeacher");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Courses_DepartmentId",
+                schema: "ReportGenerator",
+                table: "Courses");
 
             migrationBuilder.DropColumn(
                 name: "DepartmentId",
@@ -581,7 +459,17 @@ namespace Migrators.MSSQL.Migrations.Application
                 table: "Teachers");
 
             migrationBuilder.DropColumn(
+                name: "NameInNtustCourse",
+                schema: "ReportGenerator",
+                table: "Teachers");
+
+            migrationBuilder.DropColumn(
                 name: "QualificationId",
+                schema: "ReportGenerator",
+                table: "Teachers");
+
+            migrationBuilder.DropColumn(
+                name: "ResignDate",
                 schema: "ReportGenerator",
                 table: "Teachers");
 
@@ -589,6 +477,11 @@ namespace Migrators.MSSQL.Migrations.Application
                 name: "Title",
                 schema: "ReportGenerator",
                 table: "Teachers");
+
+            migrationBuilder.DropColumn(
+                name: "Id",
+                schema: "ReportGenerator",
+                table: "CourseTeacher");
 
             migrationBuilder.DropColumn(
                 name: "ClassRoomNo",
@@ -604,17 +497,6 @@ namespace Migrators.MSSQL.Migrations.Application
                 name: "DepartmentId",
                 schema: "ReportGenerator",
                 table: "Courses");
-
-            migrationBuilder.DropColumn(
-                name: "Id",
-                schema: "Catalog",
-                table: "CourseTeacher");
-
-            migrationBuilder.RenameTable(
-                name: "CourseTeacher",
-                schema: "Catalog",
-                newName: "CourseTeacher",
-                newSchema: "ReportGenerator");
 
             migrationBuilder.RenameColumn(
                 name: "TeacherId",
@@ -649,7 +531,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 type: "nvarchar(10)",
                 maxLength: 10,
                 nullable: false,
-                defaultValue: "",
+                defaultValue: string.Empty,
                 comment: "IM/FM/...，單一值");
 
             migrationBuilder.AddColumn<string>(
@@ -659,7 +541,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 type: "nvarchar(10)",
                 maxLength: 10,
                 nullable: false,
-                defaultValue: "",
+                defaultValue: string.Empty,
                 comment: "SA/IP/...，單一值");
 
             migrationBuilder.AddColumn<string>(

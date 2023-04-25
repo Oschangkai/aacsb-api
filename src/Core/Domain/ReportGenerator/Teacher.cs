@@ -10,6 +10,9 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [MaxLength(80)]
     public string Name { get; set; }
 
+    [MaxLength(200)]
+    public string? NameInNtustCourse { get; set; }
+
     [Comment("SA/IP/...，單一值")]
     [MaxLength(10)]
     public Qualification? Qualification { get; set; }
@@ -47,6 +50,9 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [Comment("職稱")]
     [MaxLength(80)]
     public string? Title { get; set; }
+
+    [Comment("離職日期")]
+    public DateTime? ResignDate { get; set; }
 
     [Comment("學術研究相關")]
     public ICollection<Research>? Research { get; set; }
