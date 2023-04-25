@@ -12,5 +12,11 @@ public class GetTeacherByChineseNameSpec : Specification<Teacher, Teacher>
 public class GetTeacherByNameSpec : Specification<Teacher, Teacher>
 {
     public GetTeacherByNameSpec(string name, string englishName, Guid importId) =>
-        Query.Where(t => t.Name == name && t.EnglishNameInNtustCourse == englishName && t.ImportSignatureId == importId);
+        Query.Where(t => t.NameInNtustCourse == name && t.EnglishNameInNtustCourse == englishName);
+}
+
+public class GetAllWorkingTeachersSpec : Specification<Teacher, Teacher>
+{
+    public GetAllWorkingTeachersSpec() =>
+        Query.Where(t => t.ResignDate == null);
 }

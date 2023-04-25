@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using AACSB.WebApi.Application.Common.Interfaces;
@@ -68,6 +69,7 @@ public class FetchCoursesJob : IFetchCourseJob
     [Queue("notdefault")]
     public async Task FetchAsync(int year, int semester, string[] departments, CancellationToken cancellationToken)
     {
+        // TODO: Use Unit of Work to do this job
         // Task1: If department not provided, fetch all departments related to 管院
         if (departments.Length <= 0)
         {
@@ -132,7 +134,7 @@ public class FetchCoursesJob : IFetchCourseJob
             var cl = new List<Course>();
             foreach (var c in courses)
             {
-                var course = new Course()
+                var course = new Course
                 {
                     Semester = c.Semester,
                     Code = c.Code,
@@ -146,8 +148,8 @@ public class FetchCoursesJob : IFetchCourseJob
                     ClassRoomNo = c.ClassRoomNo,
                     Contents = c.Contents,
                     ImportSignatureId = signature.Id,
+                    Teachers = await ProcessTeacherString(c.Teachers!, signature)
                 };
-                course.Teachers = await ProcessTeacherString(c.Teachers!, signature);
                 cl.Add(course);
             }
 
@@ -168,15 +170,16 @@ public class FetchCoursesJob : IFetchCourseJob
         var regex = new Regex(",(?!\\s)");
         string[] names = regex.Split(teacher.First().Name);
         string[] englishNames = regex.Split(teacher.First().EnglishName!);
-        if (names.Length > englishNames.Length)
+        if (names.Length != englishNames.Length)
         {
             englishNames = teacher.First().EnglishName!.Split(',');
         }
 
         var correctTeachers = names
-            .Select(n => new Teacher()
+            .Select(n => new Teacher
             {
                 Name = n.Trim(),
+                NameInNtustCourse = n.Trim(),
                 EnglishName = englishNames[names.ToList().IndexOf(n)].Trim(),
                 EnglishNameInNtustCourse = englishNames[names.ToList().IndexOf(n)].Trim(),
                 ImportSignatureId = s.Id
@@ -185,11 +188,11 @@ public class FetchCoursesJob : IFetchCourseJob
         for (int i = 0; i < correctTeachers.Count; i++)
         {
             var t =
-                await _teacherRepo.FirstOrDefaultAsync(new GetTeacherByNameSpec(correctTeachers[i].Name, correctTeachers[i].EnglishNameInNtustCourse, s.Id));
+                await _teacherRepo.FirstOrDefaultAsync(new GetTeacherByNameSpec(correctTeachers[i].Name, correctTeachers[i].EnglishName, s.Id));
             correctTeachers[i] = t ?? await _teacherRepo.AddAsync(correctTeachers[i]);
         }
 
-        return correctTeachers.ConvertAll(t => new CourseTeacher()
+        return correctTeachers.ConvertAll(t => new CourseTeacher
         {
             TeacherId = t.Id
         });
