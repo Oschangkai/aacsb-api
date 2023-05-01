@@ -41,7 +41,7 @@ public class Teacher : AuditableEntity, IAggregateRoot
 
     [Comment("MT/RES/... 可以為多值")]
     [MaxLength(100)]
-    public ICollection<Responsibility>? Responsibilities { get; set; }
+    public string? Responsibilities { get; set; }
 
     [Comment("Email")]
     [MaxLength(80)]
