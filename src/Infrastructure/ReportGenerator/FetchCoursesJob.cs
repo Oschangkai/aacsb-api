@@ -116,9 +116,9 @@ public class FetchCoursesJob : IFetchCourseJob
                         Credit = Convert.ToDecimal(cc.CreditPoint),
                         Required = cc.RequireOption == "R", // Required = R, Not required = E
                         Year = cc.AllYear == "F", // Full Year = F, Half Year = H
-                        Time = cc.CourseTimes,
-                        ClassRoomNo = cc.ClassRoomNo,
-                        Contents = cc.Contents,
+                        Time = cc.Node,
+                        cc.ClassRoomNo,
+                        cc.Contents,
                         ImportSignatureId = signature.Id,
                         Teachers = new List<Teacher>()
                         {
