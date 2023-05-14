@@ -24,14 +24,14 @@ public class Course : AuditableEntity, IAggregateRoot
     public decimal Credit { get; set; }
 
     [Comment("必修/選修")]
-    public bool Required { get; set; }
+    public bool? Required { get; set; }
 
     [Comment("全半學年")]
-    public bool Year { get; set; }
+    public bool? Year { get; set; }
 
     [Comment("節次，M1, T6, W3，以逗點分隔")]
     [MaxLength(500)]
-    public string Time { get; set; }
+    public string? Time { get; set; }
 
     [Comment("教室")]
     [MaxLength(50)]
