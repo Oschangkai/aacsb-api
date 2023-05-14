@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrators.MSSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230508135436_Denormalize_TeacherResponsibility")]
+    [Migration("20230514154908_Denormalize_TeacherResponsibility")]
     partial class Denormalize_TeacherResponsibility
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,7 +187,7 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<bool>("Required")
+                    b.Property<bool?>("Required")
                         .HasColumnType("bit")
                         .HasComment("必修/選修");
 
@@ -201,12 +201,11 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("Time")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)")
                         .HasComment("節次，M1, T6, W3，以逗點分隔");
 
-                    b.Property<bool>("Year")
+                    b.Property<bool?>("Year")
                         .HasColumnType("bit")
                         .HasComment("全半學年");
 
