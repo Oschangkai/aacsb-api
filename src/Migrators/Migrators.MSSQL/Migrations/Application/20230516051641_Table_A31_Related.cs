@@ -69,8 +69,10 @@ namespace Migrators.MSSQL.Migrations.Application
                         "SUM(c.[Credit]) OVER(PARTITION BY c.[Discipline], c.[Teacher]) AS [DisciplineTotal]," +
                         "c.[TeacherId]," +
                         "c.[Teacher]," +
+                        "c.[TeacherEnglishName]," +
                         "d.[EnglishName] AS [Department]," +
-                        "c.[Degree] + ', ' + convert(varchar, c.[DegreeYear]) AS Degree," +
+                        "c.[Degree]," +
+                        "c.[DegreeYear]," +
                         "c.[Responsibilities]," +
                         "q.[Abbreviation] AS [Qualification]," +
                         "c.[WorkType]," +
