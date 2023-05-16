@@ -10,6 +10,7 @@ public static class AACSBAction
     public const string Update = nameof(Update);
     public const string Delete = nameof(Delete);
     public const string Export = nameof(Export);
+    public const string Import = nameof(Import);
     public const string Generate = nameof(Generate);
     public const string Clean = nameof(Clean);
     public const string UpgradeSubscription = nameof(UpgradeSubscription);
@@ -27,6 +28,7 @@ public static class AACSBResource
     public const string Products = nameof(Products);
     public const string Brands = nameof(Brands);
     public const string Courses = nameof(Courses);
+    public const string Report = nameof(Report);
 }
 
 public static class AACSBPermissions
@@ -65,7 +67,9 @@ public static class AACSBPermissions
         new("View Tenants", AACSBAction.View, AACSBResource.Tenants, IsRoot: true),
         new("Create Tenants", AACSBAction.Create, AACSBResource.Tenants, IsRoot: true),
         new("Update Tenants", AACSBAction.Update, AACSBResource.Tenants, IsRoot: true),
-        new("Upgrade Tenant Subscription", AACSBAction.UpgradeSubscription, AACSBResource.Tenants, IsRoot: true)
+        new("Upgrade Tenant Subscription", AACSBAction.UpgradeSubscription, AACSBResource.Tenants, IsRoot: true),
+        new("Import Courses", AACSBAction.Import, AACSBResource.Courses),
+        new("View Report", AACSBAction.View, AACSBResource.Report),
     };
 
     public static IReadOnlyList<AACSBPermission> All { get; } = new ReadOnlyCollection<AACSBPermission>(_all);

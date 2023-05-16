@@ -46,19 +46,21 @@ internal class ApplicationDbSeeder
                 await _roleManager.CreateAsync(role);
             }
 
-            // Assign permissions
-            if (roleName == AACSBRoles.Basic)
+            switch (roleName)
             {
-                await AssignPermissionsToRoleAsync(dbContext, AACSBPermissions.Basic, role);
-            }
-            else if (roleName == AACSBRoles.Admin)
-            {
-                await AssignPermissionsToRoleAsync(dbContext, AACSBPermissions.Admin, role);
+                // Assign permissions
+                case AACSBRoles.Basic:
+                    await AssignPermissionsToRoleAsync(dbContext, AACSBPermissions.Basic, role);
+                    break;
+                case AACSBRoles.Admin:
+                    await AssignPermissionsToRoleAsync(dbContext, AACSBPermissions.Admin, role);
 
-                if (_currentTenant.Id == MultitenancyConstants.Root.Id)
-                {
-                    await AssignPermissionsToRoleAsync(dbContext, AACSBPermissions.Root, role);
-                }
+                    if (_currentTenant.Id == MultitenancyConstants.Root.Id)
+                    {
+                        await AssignPermissionsToRoleAsync(dbContext, AACSBPermissions.Root, role);
+                    }
+
+                    break;
             }
         }
     }
@@ -68,18 +70,17 @@ internal class ApplicationDbSeeder
         var currentClaims = await _roleManager.GetClaimsAsync(role);
         foreach (var permission in permissions)
         {
-            if (!currentClaims.Any(c => c.Type == AACSBClaims.Permission && c.Value == permission.Name))
+            if (currentClaims.Any(c => c.Type == AACSBClaims.Permission && c.Value == permission.Name)) continue;
+
+            _logger.LogInformation("Seeding {role} Permission '{permission}' for '{tenantId}' Tenant.", role.Name, permission.Name, _currentTenant.Id);
+            dbContext.RoleClaims.Add(new ApplicationRoleClaim
             {
-                _logger.LogInformation("Seeding {role} Permission '{permission}' for '{tenantId}' Tenant.", role.Name, permission.Name, _currentTenant.Id);
-                dbContext.RoleClaims.Add(new ApplicationRoleClaim
-                {
-                    RoleId = role.Id,
-                    ClaimType = AACSBClaims.Permission,
-                    ClaimValue = permission.Name,
-                    CreatedBy = "ApplicationDbSeeder"
-                });
-                await dbContext.SaveChangesAsync();
-            }
+                RoleId = role.Id,
+                ClaimType = AACSBClaims.Permission,
+                ClaimValue = permission.Name,
+                CreatedBy = "ApplicationDbSeeder"
+            });
+            await dbContext.SaveChangesAsync();
         }
     }
 

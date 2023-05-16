@@ -5,7 +5,7 @@ namespace AACSB.WebApi.Host.Controllers.ReportGenerator;
 public class CourseController : VersionedApiController
 {
     [HttpPost("fetch")]
-    // [MustHavePermission(AACSBAction.Generate, AACSBResource.Courses)]
+    // [MustHavePermission(AACSBAction.Import, AACSBResource.Courses)]
     [AllowAnonymous]
     [OpenApiOperation("Fetch courses from NTUST.", "")]
     public Task<JobEnqueuedResponse> Fetch(FetchCoursesRequest request)
