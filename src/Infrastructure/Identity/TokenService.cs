@@ -19,6 +19,7 @@ namespace AACSB.WebApi.Infrastructure.Identity;
 internal class TokenService : ITokenService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly IStringLocalizer _t;
     private readonly SecuritySettings _securitySettings;
     private readonly JwtSettings _jwtSettings;
@@ -26,12 +27,14 @@ internal class TokenService : ITokenService
 
     public TokenService(
         UserManager<ApplicationUser> userManager,
+        RoleManager<ApplicationRole> roleManager,
         IOptions<JwtSettings> jwtSettings,
         IStringLocalizer<TokenService> localizer,
         AACSBTenantInfo? currentTenant,
         IOptions<SecuritySettings> securitySettings)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
         _t = localizer;
         _jwtSettings = jwtSettings.Value;
         _currentTenant = currentTenant;
@@ -94,7 +97,16 @@ internal class TokenService : ITokenService
 
     private async Task<TokenResponse> GenerateTokensAndUpdateUser(ApplicationUser user, string ipAddress)
     {
-        string token = GenerateJwt(user, ipAddress);
+        var roles = await _userManager.GetRolesAsync(user);
+        var permissionClaims = new List<Claim>();
+        foreach (string role in roles)
+        {
+            var r = await _roleManager.FindByNameAsync(role);
+            var rc = await _roleManager.GetClaimsAsync(r);
+            permissionClaims.AddRange(rc);
+        }
+
+        string token = GenerateJwt(user, permissionClaims);
 
         user.RefreshToken = GenerateRefreshToken();
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationInDays);
@@ -104,22 +116,22 @@ internal class TokenService : ITokenService
         return new TokenResponse(token, user.RefreshToken, user.RefreshTokenExpiryTime);
     }
 
-    private string GenerateJwt(ApplicationUser user, string ipAddress) =>
-        GenerateEncryptedToken(GetSigningCredentials(), GetClaims(user, ipAddress));
+    private string GenerateJwt(ApplicationUser user, List<Claim> permissionClaims) =>
+        GenerateEncryptedToken(GetSigningCredentials(), GetClaims(user, permissionClaims));
 
-    private IEnumerable<Claim> GetClaims(ApplicationUser user, string ipAddress) =>
+    private IEnumerable<Claim> GetClaims(ApplicationUser user, List<Claim> permissionClaims) =>
         new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Email, user.Email),
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Email),
             new(AACSBClaims.Fullname, $"{user.FirstName} {user.LastName}"),
-            new(ClaimTypes.Name, user.FirstName ?? string.Empty),
-            new(ClaimTypes.Surname, user.LastName ?? string.Empty),
-            new(AACSBClaims.IpAddress, ipAddress),
+            // new(ClaimTypes.Name, user.FirstName ?? string.Empty),
+            // new(ClaimTypes.Surname, user.LastName ?? string.Empty),
+            // new(AACSBClaims.IpAddress, ipAddress),
             new(AACSBClaims.Tenant, _currentTenant!.Id),
             new(AACSBClaims.ImageUrl, user.ImageUrl ?? string.Empty),
-            new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
-        };
+            // new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
+        }.Union(permissionClaims.GroupBy(c => c.Value).Select(c => c.First()));
 
     private string GenerateRefreshToken()
     {
@@ -145,11 +157,11 @@ internal class TokenService : ITokenService
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero,
-            ValidateLifetime = false
+            ValidateLifetime = true
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
