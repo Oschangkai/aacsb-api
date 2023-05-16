@@ -4,6 +4,10 @@ namespace AACSB.WebApi.Infrastructure.Auth.Jwt;
 
 public class JwtSettings : IValidatableObject
 {
+    public string Audience { get; set; } = string.Empty;
+
+    public string Issuer { get; set; } = string.Empty;
+
     public string Key { get; set; } = string.Empty;
 
     public int TokenExpirationInMinutes { get; set; }

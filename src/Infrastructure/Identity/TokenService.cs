@@ -10,6 +10,7 @@ using AACSB.WebApi.Infrastructure.Multitenancy;
 using AACSB.WebApi.Shared.Authorization;
 using AACSB.WebApi.Shared.Multitenancy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -144,8 +145,11 @@ internal class TokenService : ITokenService
     private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
     {
         var token = new JwtSecurityToken(
+           audience: _jwtSettings.Audience,
+           issuer: _jwtSettings.Issuer,
            claims: claims,
            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.TokenExpirationInMinutes),
+           notBefore: DateTime.UtcNow,
            signingCredentials: signingCredentials);
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
@@ -180,5 +184,18 @@ internal class TokenService : ITokenService
     {
         byte[] secret = Encoding.UTF8.GetBytes(_jwtSettings.Key);
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
+    }
+
+    public async Task RevokeRefreshToken(string refreshTokenString)
+    {
+        if (string.IsNullOrEmpty(refreshTokenString)) return;
+
+        var user = _userManager.Users
+            .Include(u => u.RefreshToken)
+            .FirstOrDefault(u => u.RefreshToken == refreshTokenString);
+        if (user == null) return;
+
+        user.RefreshTokenExpiryTime = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
     }
 }
