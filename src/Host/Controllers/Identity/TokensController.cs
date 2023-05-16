@@ -27,6 +27,14 @@ public sealed class TokensController : VersionNeutralApiController
         return _tokenService.RefreshTokenAsync(request, GetIpAddress());
     }
 
+    [AllowAnonymous]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(string token)
+    {
+        await _tokenService.RevokeRefreshToken(token);
+        return Accepted();
+    }
+
     private string GetIpAddress() =>
         Request.Headers.ContainsKey("X-Forwarded-For")
             ? Request.Headers["X-Forwarded-For"]
