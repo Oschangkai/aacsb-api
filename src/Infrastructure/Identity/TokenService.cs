@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AACSB.WebApi.Application.Common.Exceptions;
+using AACSB.WebApi.Application.Enums;
 using AACSB.WebApi.Application.Identity.Tokens;
 using AACSB.WebApi.Infrastructure.Auth;
 using AACSB.WebApi.Infrastructure.Auth.Jwt;
@@ -12,6 +13,7 @@ using AACSB.WebApi.Shared.Multitenancy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -25,12 +27,14 @@ internal class TokenService : ITokenService
     private readonly SecuritySettings _securitySettings;
     private readonly JwtSettings _jwtSettings;
     private readonly AACSBTenantInfo? _currentTenant;
+    private readonly ILogger<TokenService> _logger;
 
     public TokenService(
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         IOptions<JwtSettings> jwtSettings,
         IStringLocalizer<TokenService> localizer,
+        ILogger<TokenService> logger,
         AACSBTenantInfo? currentTenant,
         IOptions<SecuritySettings> securitySettings)
     {
@@ -40,6 +44,7 @@ internal class TokenService : ITokenService
         _jwtSettings = jwtSettings.Value;
         _currentTenant = currentTenant;
         _securitySettings = securitySettings.Value;
+        _logger = logger;
     }
 
     public async Task<TokenResponse> GetTokenAsync(TokenRequest request, string ipAddress, CancellationToken cancellationToken)
@@ -75,28 +80,34 @@ internal class TokenService : ITokenService
             }
         }
 
-        return await GenerateTokensAndUpdateUser(user, ipAddress);
+        return await GenerateTokensAndUpdateUser(user);
     }
 
-    public async Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request, string ipAddress)
+    public async Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request)
     {
         var userPrincipal = GetPrincipalFromExpiredToken(request.Token);
-        string? userEmail = userPrincipal.GetEmail();
-        var user = await _userManager.FindByEmailAsync(userEmail);
+        string? userId = userPrincipal.GetUserId();
+        var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
         {
             throw new UnauthorizedException(_t["Authentication Failed."]);
         }
 
-        if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user.RefreshTokens != null)
         {
-            throw new UnauthorizedException(_t["Invalid Refresh Token."]);
+            var refreshToken = user.RefreshTokens.SingleOrDefault(t => t.Token == request.RefreshToken);
+            if (refreshToken is null or { IsExpired: true })
+            {
+                throw new UnauthorizedException($"Login Timeout, Please Login Again");
+            }
         }
 
-        return await GenerateTokensAndUpdateUser(user, ipAddress);
+        var response = await GenerateTokensAndUpdateUser(user);
+        await RevokeRefreshToken(RefreshTokenRevokeReasons.ReplacedByAnother, request.RefreshToken, response.RefreshToken);
+        return response;
     }
 
-    private async Task<TokenResponse> GenerateTokensAndUpdateUser(ApplicationUser user, string ipAddress)
+    private async Task<TokenResponse> GenerateTokensAndUpdateUser(ApplicationUser user)
     {
         var roles = await _userManager.GetRolesAsync(user);
         var permissionClaims = new List<Claim>();
@@ -109,12 +120,13 @@ internal class TokenService : ITokenService
 
         string token = GenerateJwt(user, permissionClaims);
 
-        user.RefreshToken = GenerateRefreshToken();
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationInDays);
+        var refreshToken = GenerateRefreshToken();
+        user.RefreshTokens ??= new List<RefreshToken>();
+        user.RefreshTokens.Add(refreshToken);
 
         await _userManager.UpdateAsync(user);
 
-        return new TokenResponse(token, user.RefreshToken, user.RefreshTokenExpiryTime);
+        return new TokenResponse(token, refreshToken.Token, ((DateTimeOffset)refreshToken.Expires).ToUnixTimeSeconds());
     }
 
     private string GenerateJwt(ApplicationUser user, List<Claim> permissionClaims) =>
@@ -126,20 +138,28 @@ internal class TokenService : ITokenService
             new(JwtRegisteredClaimNames.Sub, user.Id),
             new(JwtRegisteredClaimNames.Email, user.Email),
             new(AACSBClaims.Fullname, $"{user.FirstName} {user.LastName}"),
-            // new(ClaimTypes.Name, user.FirstName ?? string.Empty),
-            // new(ClaimTypes.Surname, user.LastName ?? string.Empty),
-            // new(AACSBClaims.IpAddress, ipAddress),
             new(AACSBClaims.Tenant, _currentTenant!.Id),
             new(AACSBClaims.ImageUrl, user.ImageUrl ?? string.Empty),
-            // new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
         }.Union(permissionClaims.GroupBy(c => c.Value).Select(c => c.First()));
 
-    private string GenerateRefreshToken()
+    private RefreshToken GenerateRefreshToken()
     {
-        byte[] randomNumber = new byte[32];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        return Convert.ToBase64String(randomNumber);
+        return new RefreshToken()
+        {
+            Token = RandomTokenString(),
+            Expires = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationInDays),
+            CreatedOn = DateTime.UtcNow
+        };
+    }
+
+    private string RandomTokenString()
+    {
+        using var rngCryptoServiceProvider = RandomNumberGenerator.Create();
+        byte[] randomBytes = new byte[40];
+        rngCryptoServiceProvider.GetBytes(randomBytes);
+
+        // convert random bytes to hex string
+        return BitConverter.ToString(randomBytes).Replace("-", string.Empty);
     }
 
     private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
@@ -162,7 +182,9 @@ internal class TokenService : ITokenService
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
             ValidateIssuer = true,
+            ValidIssuer = _jwtSettings.Issuer,
             ValidateAudience = true,
+            ValidAudience = _jwtSettings.Audience,
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero,
             ValidateLifetime = true
@@ -186,16 +208,25 @@ internal class TokenService : ITokenService
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
-    public async Task RevokeRefreshToken(string refreshTokenString)
+    public async Task RevokeRefreshToken(string reason, string refreshTokenString, string? replacedToken = null)
     {
         if (string.IsNullOrEmpty(refreshTokenString)) return;
 
         var user = _userManager.Users
-            .Include(u => u.RefreshToken)
-            .FirstOrDefault(u => u.RefreshToken == refreshTokenString);
-        if (user == null) return;
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefault(u
+                => u.RefreshTokens != null && u.RefreshTokens.Any(rt => rt.Token == refreshTokenString));
 
-        user.RefreshTokenExpiryTime = DateTime.UtcNow;
+        var refreshToken = user?.RefreshTokens?.Find(rt => rt.Token == refreshTokenString);
+        if (refreshToken is null) return;
+
+        refreshToken.RevokedOn = DateTime.UtcNow;
+        refreshToken.RevokeReason = reason;
+        if (!string.IsNullOrEmpty(replacedToken))
+        {
+            refreshToken.ReplacedByToken = replacedToken;
+        }
+
         await _userManager.UpdateAsync(user);
     }
 }

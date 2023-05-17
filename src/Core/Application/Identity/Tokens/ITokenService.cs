@@ -4,7 +4,7 @@ public interface ITokenService : ITransientService
 {
     Task<TokenResponse> GetTokenAsync(TokenRequest request, string ipAddress, CancellationToken cancellationToken);
 
-    Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request, string ipAddress);
+    Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request);
 
-    Task RevokeRefreshToken(string refreshTokenString);
+    Task RevokeRefreshToken(string reason, string token, string? replacedToken = null);
 }
