@@ -1,3 +1,4 @@
+using AACSB.WebApi.Application.Enums;
 using AACSB.WebApi.Application.Identity.Tokens;
 
 namespace AACSB.WebApi.Host.Controllers.Identity;
@@ -24,14 +25,14 @@ public sealed class TokensController : VersionNeutralApiController
     [ApiConventionMethod(typeof(AACSBApiConventions), nameof(AACSBApiConventions.Search))]
     public Task<TokenResponse> RefreshAsync(RefreshTokenRequest request)
     {
-        return _tokenService.RefreshTokenAsync(request, GetIpAddress());
+        return _tokenService.RefreshTokenAsync(request);
     }
 
     [AllowAnonymous]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout(string token)
     {
-        await _tokenService.RevokeRefreshToken(token);
+        await _tokenService.RevokeRefreshToken(RefreshTokenRevokeReasons.LoggedOut, token);
         return Accepted();
     }
 

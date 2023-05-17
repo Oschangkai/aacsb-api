@@ -103,7 +103,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 type: "nvarchar(500)",
                 maxLength: 500,
                 nullable: false,
-                defaultValue: "",
+                defaultValue: string.Empty,
                 comment: "節次，M1, T6, W3，以逗點分隔",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(500)",
