@@ -120,21 +120,21 @@ public static class SpecificationBuilderExtensions
         {
             var parameter = Expression.Parameter(typeof(T));
 
-            Expression binaryExpresioFilter;
+            Expression binaryExpressionFilter;
 
             if (!string.IsNullOrEmpty(filter.Logic))
             {
                 if (filter.Filters is null) throw new CustomException("The Filters attribute is required when declaring a logic");
-                binaryExpresioFilter = CreateFilterExpression(filter.Logic, filter.Filters, parameter);
+                binaryExpressionFilter = CreateFilterExpression(filter.Logic, filter.Filters, parameter);
             }
             else
             {
                 var filterValid = GetValidFilter(filter);
-                binaryExpresioFilter = CreateFilterExpression(filterValid.Field!, filterValid.Operator!, filterValid.Value, parameter);
+                binaryExpressionFilter = CreateFilterExpression(filterValid.Field!, filterValid.Operator!, filterValid.Value, parameter);
             }
 
             ((List<WhereExpressionInfo<T>>)specificationBuilder.Specification.WhereExpressions)
-                .Add(new WhereExpressionInfo<T>(Expression.Lambda<Func<T, bool>>(binaryExpresioFilter, parameter)));
+                .Add(new WhereExpressionInfo<T>(Expression.Lambda<Func<T, bool>>(binaryExpressionFilter, parameter)));
         }
 
         return new OrderedSpecificationBuilder<T>(specificationBuilder.Specification);
@@ -149,20 +149,20 @@ public static class SpecificationBuilderExtensions
 
         foreach (var filter in filters)
         {
-            Expression bExpresionFilter;
+            Expression bExpressionFilter;
 
             if (!string.IsNullOrEmpty(filter.Logic))
             {
                 if (filter.Filters is null) throw new CustomException("The Filters attribute is required when declaring a logic");
-                bExpresionFilter = CreateFilterExpression(filter.Logic, filter.Filters, parameter);
+                bExpressionFilter = CreateFilterExpression(filter.Logic, filter.Filters, parameter);
             }
             else
             {
                 var filterValid = GetValidFilter(filter);
-                bExpresionFilter = CreateFilterExpression(filterValid.Field!, filterValid.Operator!, filterValid.Value, parameter);
+                bExpressionFilter = CreateFilterExpression(filterValid.Field!, filterValid.Operator!, filterValid.Value, parameter);
             }
 
-            filterExpression = filterExpression is null ? bExpresionFilter : CombineFilter(logic, filterExpression, bExpresionFilter);
+            filterExpression = filterExpression is null ? bExpressionFilter : CombineFilter(logic, filterExpression, bExpressionFilter);
         }
 
         return filterExpression;
@@ -174,9 +174,9 @@ public static class SpecificationBuilderExtensions
         object? value,
         ParameterExpression parameter)
     {
-        var propertyExpresion = GetPropertyExpression(field, parameter);
-        var valueExpresion = GeValuetExpression(field, value, propertyExpresion.Type);
-        return CreateFilterExpression(propertyExpresion, valueExpresion, filterOperator);
+        var propertyExpression = GetPropertyExpression(field, parameter);
+        var valueExpression = GeValuetExpression(field, value, propertyExpression.Type);
+        return CreateFilterExpression(propertyExpression, valueExpression, filterOperator);
     }
 
     private static Expression CreateFilterExpression(
@@ -201,14 +201,14 @@ public static class SpecificationBuilderExtensions
 
     private static Expression CombineFilter(
         string filterOperator,
-        Expression bExpresionBase,
-        Expression bExpresion)
+        Expression bExpressionBase,
+        Expression bExpression)
     {
         return filterOperator switch
         {
-            FilterLogic.AND => Expression.And(bExpresionBase, bExpresion),
-            FilterLogic.OR => Expression.Or(bExpresionBase, bExpresion),
-            FilterLogic.XOR => Expression.ExclusiveOr(bExpresionBase, bExpresion),
+            FilterLogic.AND => Expression.And(bExpressionBase, bExpression),
+            FilterLogic.OR => Expression.Or(bExpressionBase, bExpression),
+            FilterLogic.XOR => Expression.ExclusiveOr(bExpressionBase, bExpression),
             _ => throw new ArgumentException("FilterLogic is not valid.", nameof(FilterLogic)),
         };
     }

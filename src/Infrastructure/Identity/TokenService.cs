@@ -90,7 +90,7 @@ internal class TokenService : ITokenService
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
         {
-            throw new UnauthorizedException(_t["Authentication Failed."]);
+            throw new ApiAuthenticateException(_t["Authentication Failed."]);
         }
 
         if (user.RefreshTokens != null)
@@ -98,7 +98,7 @@ internal class TokenService : ITokenService
             var refreshToken = user.RefreshTokens.SingleOrDefault(t => t.Token == request.RefreshToken);
             if (refreshToken is null or { IsExpired: true })
             {
-                throw new UnauthorizedException($"Login Timeout, Please Login Again");
+                throw new ApiAuthenticateException($"Login Timeout, Please Login Again");
             }
         }
 
@@ -196,7 +196,7 @@ internal class TokenService : ITokenService
                 SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase))
         {
-            throw new UnauthorizedException(_t["Invalid Token."]);
+            throw new ApiAuthenticateException(_t["Invalid Token."]);
         }
 
         return principal;
