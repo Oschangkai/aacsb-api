@@ -8,5 +8,6 @@ public class ErrorResult
     public string? Exception { get; set; }
     public string? ErrorId { get; set; }
     public string? SupportMessage { get; set; }
+    public string? RedirectUrl { get; set; }
     public int StatusCode { get; set; }
 }

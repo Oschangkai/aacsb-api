@@ -1,7 +1,9 @@
 using System.Net;
 using AACSB.WebApi.Application.Common.Exceptions;
 using AACSB.WebApi.Application.Common.Interfaces;
+using AACSB.WebApi.Infrastructure.Common.Settings;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Serilog;
 using Serilog.Context;
@@ -12,15 +14,18 @@ internal class ExceptionMiddleware : IMiddleware
 {
     private readonly ICurrentUser _currentUser;
     private readonly IStringLocalizer _t;
+    private readonly IConfiguration _config;
     private readonly ISerializerService _jsonSerializer;
 
     public ExceptionMiddleware(
         ICurrentUser currentUser,
         IStringLocalizer<ExceptionMiddleware> localizer,
+        IConfiguration config,
         ISerializerService jsonSerializer)
     {
         _currentUser = currentUser;
         _t = localizer;
+        _config = config;
         _jsonSerializer = jsonSerializer;
     }
 
@@ -57,8 +62,27 @@ internal class ExceptionMiddleware : IMiddleware
                 }
             }
 
+            var corsSettings = _config.GetSection(nameof(CorsSettings)).Get<CorsSettings>();
             switch (exception)
             {
+                case ApiAuthenticateException e:
+                    errorResult.StatusCode = (int)e.StatusCode;
+                    if (e.ErrorMessages is not null)
+                    {
+                        errorResult.Messages = e.ErrorMessages;
+                    }
+
+                    errorResult.RedirectUrl = $"{corsSettings.Angular}/login?message={e?.Message}";
+                    break;
+                case RedirectToLoginException e:
+                    errorResult.StatusCode = (int)e.StatusCode;
+                    if (e.ErrorMessages is not null)
+                    {
+                        errorResult.Messages = e.ErrorMessages;
+                    }
+
+                    errorResult.RedirectUrl = $"{corsSettings.Angular}/login?message={e?.Message}";
+                    break;
                 case CustomException e:
                     errorResult.StatusCode = (int)e.StatusCode;
                     if (e.ErrorMessages is not null)
@@ -67,7 +91,6 @@ internal class ExceptionMiddleware : IMiddleware
                     }
 
                     break;
-
                 case KeyNotFoundException:
                     errorResult.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
@@ -81,6 +104,11 @@ internal class ExceptionMiddleware : IMiddleware
             var response = context.Response;
             if (!response.HasStarted)
             {
+                if (exception is RedirectToLoginException)
+                {
+                    response.Redirect(errorResult.RedirectUrl!);
+                }
+
                 response.ContentType = "application/json";
                 response.StatusCode = errorResult.StatusCode;
                 await response.WriteAsync(_jsonSerializer.Serialize(errorResult));
