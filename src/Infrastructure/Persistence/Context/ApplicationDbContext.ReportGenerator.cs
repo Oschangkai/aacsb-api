@@ -33,7 +33,6 @@ public partial class ApplicationDbContext
     public DbSet<TableA31Course> TableA31Course => Set<TableA31Course>();
 
     // Functions
-    public DbSet<TableA31> TableA31 => Set<TableA31>();
     [DbFunction("F_GetTeacherDiscipline", nameof(SchemaNames.ReportGenerator))]
     public IQueryable<TableA31>? GetTeacherDiscipline(string @SemesterYear)
         => throw new NotSupportedException($"{nameof(GetTeacherDiscipline)} cannot be called client side");
