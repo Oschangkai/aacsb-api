@@ -187,7 +187,7 @@ internal class TokenService : ITokenService
             ValidAudience = _jwtSettings.Audience,
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero,
-            ValidateLifetime = true
+            ValidateLifetime = false
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
