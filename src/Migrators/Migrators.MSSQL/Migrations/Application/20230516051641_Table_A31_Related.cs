@@ -58,7 +58,7 @@ namespace Migrators.MSSQL.Migrations.Application
                     "Discipline," +
                     "DisciplineId," +
                     "Semester," +
-                    "CASE WHEN TeacherCount > 1 THEN Credit / TeacherCount ELSE Credit END AS Credit\n" +
+                    "IIF(TeacherCount > 1, Credit / TeacherCount, Credit) AS Credit\n" +
                 "FROM CTE\n" +
                 "WHERE RowNum = 1;";
             const string func =
@@ -66,19 +66,19 @@ namespace Migrators.MSSQL.Migrations.Application
                 "RETURNS TABLE\n" +
                     "AS RETURN\n" +
                     "SELECT DISTINCT\n" +
-                        "SUM(c.[Credit]) OVER(PARTITION BY c.[Discipline], c.[Teacher]) AS [DisciplineTotal]," +
+                        "CAST(ROUND((SUM(c.[Credit]) OVER(PARTITION BY c.[Discipline], c.[Teacher])), 2) AS decimal(4,2)) AS [DisciplineTotal]," +
+                        "CAST(ROUND((SUM(c.[Credit]) OVER(PARTITION BY c.[Teacher])), 2) AS decimal(4,1)) AS [CreditTotal]," +
                         "c.[TeacherId]," +
                         "c.[Teacher]," +
                         "c.[TeacherEnglishName]," +
-                        "d.[EnglishName] AS [Department]," +
+                        "d.[EnglishName] AS [TeacherDepartment]," +
                         "c.[Degree]," +
                         "c.[DegreeYear]," +
                         "c.[Responsibilities]," +
-                        "q.[Abbreviation] AS [Qualification]," +
+                        "c.[Qualification]," +
                         "c.[WorkType]," +
                         "c.[Discipline]" +
                     "FROM [ReportGenerator].[V_Table_A31_Course] c\n" +
-                    "LEFT JOIN [ReportGenerator].[Qualifications] q ON c.[QualificationId] = q.[Id]\n" +
                     "LEFT JOIN [ReportGenerator].[Teachers] t ON c.[TeacherId] = t.[Id]\n" +
                     "LEFT JOIN [ReportGenerator].[Departments] d ON t.[DepartmentId] = d.[Id]\n" +
                     "WHERE\n" +
