@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AACSB.WebApi.Application.ReportGenerator;
 using AACSB.WebApi.Domain.ReportGenerator.Function;
 
@@ -8,8 +9,21 @@ public class ReportController : VersionedApiController
     [HttpPost("a31")]
     [MustHavePermission(AACSBAction.View, AACSBResource.Report)]
     [OpenApiOperation("Get AACSSB Table 3-1", "")]
-    public Task<ICollection<TableA31>> Fetch(GetTableA31Request request)
+    public Task<ICollection<TableA31>> GetTableA31(GetTableA31Request request)
     {
         return Mediator.Send(request);
+    }
+
+    [HttpPost("a31/{discipline}")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.Report)]
+    [OpenApiOperation("Get AACSSB Table 3-1 By Discipline", "")]
+    public Task<ICollection<TableA31>> GetTableA31ByDiscipline(GetTableA31Request request, [Required, FromRoute]string discipline)
+    {
+        var req = new GetTableA31ByDisciplineRequest()
+        {
+            Semester = request.Semester,
+            Discipline = discipline
+        };
+        return Mediator.Send(req);
     }
 }
