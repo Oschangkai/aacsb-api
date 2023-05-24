@@ -5,16 +5,28 @@ namespace AACSB.WebApi.Domain.ReportGenerator.Function;
 
 public class TableA31
 {
-    [Precision(38, 15)]
+    [Precision(4, 2)]
     public decimal? DisciplineTotal { get; set; }
+
+    [Precision(4, 1)]
+    public decimal? CreditTotal { get; set; }
 
     public Guid? TeacherId { get; set; }
 
     [MaxLength(80)]
     public string? Teacher { get; set; }
 
-    [MaxLength(42)]
+    [MaxLength(200)]
+    public string? TeacherEnglishName { get; set; }
+
+    [MaxLength(80)]
+    public string? TeacherDepartment { get; set; }
+
+    [MaxLength(10)]
     public string? Degree { get; set; }
+
+    [Precision(4, 0)]
+    public decimal? DegreeYear { get; set; }
 
     [Comment("MT/RES/... 可以為多值")]
     [MaxLength(100)]
