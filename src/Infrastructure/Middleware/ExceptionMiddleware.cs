@@ -51,6 +51,7 @@ internal class ExceptionMiddleware : IMiddleware
                 Source = exception.TargetSite?.DeclaringType?.FullName,
                 Exception = exception.Message.Trim(),
                 ErrorId = errorId,
+                RequestUrl = context.Request.Path,
                 SupportMessage = _t["Provide the ErrorId {0} to the support team for further analysis.", errorId]
             };
             errorResult.Messages.Add(exception.Message);
