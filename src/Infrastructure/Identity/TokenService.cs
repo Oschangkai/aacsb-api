@@ -47,7 +47,7 @@ internal class TokenService : ITokenService
         _logger = logger;
     }
 
-    public async Task<TokenResponse> GetTokenAsync(TokenRequest request, string ipAddress, CancellationToken cancellationToken)
+    public async Task<TokenResponse> GetTokenAsync(LoginRequest request, string ipAddress, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_currentTenant?.Id)
             || await _userManager.FindByEmailAsync(request.Email.Trim().Normalize()) is not { } user
@@ -98,7 +98,7 @@ internal class TokenService : ITokenService
             var refreshToken = user.RefreshTokens.SingleOrDefault(t => t.Token == request.RefreshToken);
             if (refreshToken is null or { IsExpired: true })
             {
-                throw new ApiAuthenticateException($"Login Timeout, Please Login Again");
+                throw new ApiAuthenticateException($"Login Timeout, Please Login Again.");
             }
         }
 
