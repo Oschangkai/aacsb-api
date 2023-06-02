@@ -9,5 +9,6 @@ public class ErrorResult
     public string? ErrorId { get; set; }
     public string? SupportMessage { get; set; }
     public string? RedirectUrl { get; set; }
+    public string? RequestUrl { get; set; }
     public int StatusCode { get; set; }
 }
