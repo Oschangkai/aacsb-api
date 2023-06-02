@@ -6,8 +6,8 @@
       "key": "randomstrings12345678",
       "Issuer": "AACSBSystemAuthority",
       "Audience": "AACSBSystemUser",
-      "tokenExpirationInMinutes": 60,
-      "refreshTokenExpirationInDays": 7
+      "tokenExpirationInMinutes": 30,
+      "refreshTokenExpirationInDays": 5
     },
     "AzureAd": {
       "Instance": "https://login.microsoftonline.com/",
