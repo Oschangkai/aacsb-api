@@ -23,10 +23,10 @@ public sealed class TokensController : VersionNeutralApiController
     [AllowAnonymous]
     [TenantIdHeader]
     [OpenApiOperation("Request an access token.", "")]
-    public Task<TokenResponse> GetTokenAsync(TokenRequest request, [FromHeader] string? authorization, CancellationToken cancellationToken)
+    public async Task<TokenResponse> GetTokenAsync(TokenRequest request, [FromHeader] string? authorization, CancellationToken cancellationToken)
     {
         if (request.Type == TokenExchangeTypes.UserNamePassword)
-            return _tokenService.GetTokenAsync(new LoginRequest(request.Email!, request.Password!), GetIpAddress(), cancellationToken);
+            return await _tokenService.GetTokenAsync(new LoginRequest(request.Email!, request.Password!), GetIpAddress(), cancellationToken);
 
         if (request.Type != TokenExchangeTypes.RefreshToken)
             throw new InvalidOperationException("Invalid token.");
@@ -35,7 +35,7 @@ public sealed class TokensController : VersionNeutralApiController
 
         string? scheme = headerValue.Scheme; // Bearer
         string? parameter = headerValue.Parameter; // token
-        return _tokenService.RefreshTokenAsync(new RefreshTokenRequest(parameter!, request.Token));
+        return await _tokenService.RefreshTokenAsync(new RefreshTokenRequest(parameter!, request.Token));
     }
 
     [HttpPost("refresh")]
@@ -43,14 +43,14 @@ public sealed class TokensController : VersionNeutralApiController
     [TenantIdHeader]
     [OpenApiOperation("Request an access token using a refresh token.", "")]
     [ApiConventionMethod(typeof(AACSBApiConventions), nameof(AACSBApiConventions.Search))]
-    public Task<TokenResponse> RefreshAsync(RefreshTokenBodyRequest token, [FromHeader] string authorization)
+    public async Task<TokenResponse> RefreshAsync(RefreshTokenBodyRequest token, [FromHeader] string authorization)
     {
         if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
             throw new InvalidOperationException("Invalid token request.");
 
         string? scheme = headerValue.Scheme; // Bearer
         string? parameter = headerValue.Parameter; // token
-        return _tokenService.RefreshTokenAsync(new RefreshTokenRequest(parameter!, token.RefreshToken));
+        return await _tokenService.RefreshTokenAsync(new RefreshTokenRequest(parameter!, token.RefreshToken));
     }
 
     [AllowAnonymous]
