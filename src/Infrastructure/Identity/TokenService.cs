@@ -93,13 +93,19 @@ internal class TokenService : ITokenService
             throw new ApiAuthenticateException(_t["Authentication Failed."]);
         }
 
-        if (user.RefreshTokens != null)
+        var refreshTokenOwner = _userManager.Users
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefault(u
+                => u.RefreshTokens != null && u.RefreshTokens.Any(rt => rt.Token == request.RefreshToken));
+        if (refreshTokenOwner == null || refreshTokenOwner.Id != user.Id)
         {
-            var refreshToken = user.RefreshTokens.SingleOrDefault(t => t.Token == request.RefreshToken);
-            if (refreshToken is null or { IsExpired: true })
-            {
-                throw new ApiAuthenticateException($"Login Timeout, Please Login Again.");
-            }
+            throw new ApiAuthenticateException(_t["Authentication Failed."]);
+        }
+
+        var refreshToken = refreshTokenOwner.RefreshTokens?.Find(rt => rt.Token == request.RefreshToken);
+        if (refreshToken is null or { IsActive: false })
+        {
+            throw new ApiAuthenticateException($"Login Timeout, Please Login Again.");
         }
 
         var response = await GenerateTokensAndUpdateUser(user);
