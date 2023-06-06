@@ -1,7 +1,9 @@
+using System.Security.Claims;
 using Finbuckle.MultiTenant;
 using AACSB.WebApi.Application.Common.Events;
 using AACSB.WebApi.Application.Common.Exceptions;
 using AACSB.WebApi.Application.Common.Interfaces;
+using AACSB.WebApi.Application.Common.Models;
 using AACSB.WebApi.Application.Identity.Roles;
 using AACSB.WebApi.Domain.Identity;
 using AACSB.WebApi.Infrastructure.Persistence.Context;
@@ -54,16 +56,16 @@ internal class RoleService : IRoleService
             is ApplicationRole existingRole
             && existingRole.Id != excludeId;
 
-    public async Task<RoleDto> GetByIdAsync(string id) =>
+    public async Task<RoleDetailDto> GetByIdAsync(string id) =>
         await _db.Roles.SingleOrDefaultAsync(x => x.Id == id) is { } role
-            ? role.Adapt<RoleDto>()
+            ? role.Adapt<RoleDetailDto>()
             : throw new NotFoundException(_t["Role Not Found"]);
 
-    public async Task<RoleDto> GetByIdWithPermissionsAsync(string roleId, CancellationToken cancellationToken)
+    public async Task<RoleDetailDto> GetByIdWithPermissionsAsync(string roleId, CancellationToken cancellationToken)
     {
         var role = await GetByIdAsync(roleId);
 
-        role.Permissions = await _db.RoleClaims
+        role.Claims = await _db.RoleClaims
             .Where(c => c.RoleId == roleId && c.ClaimType == AACSBClaims.Permission)
             .Select(c => c.ClaimValue)
             .ToListAsync(cancellationToken);
@@ -71,49 +73,73 @@ internal class RoleService : IRoleService
         return role;
     }
 
-    public async Task<string> CreateOrUpdateAsync(CreateOrUpdateRoleRequest request)
+    public async Task<MessageResponse> CreateAsync(CreateRoleRequest request)
     {
-        if (string.IsNullOrEmpty(request.Id))
+        // Create a new role.
+        var role = new ApplicationRole(request.Name, request.Description);
+        var result = await _roleManager.CreateAsync(role);
+
+        if (!result.Succeeded)
         {
-            // Create a new role.
-            var role = new ApplicationRole(request.Name, request.Description);
-            var result = await _roleManager.CreateAsync(role);
-
-            if (!result.Succeeded)
-            {
-                throw new InternalServerException(_t["Register role failed"], result.GetErrors(_t));
-            }
-
-            await _events.PublishAsync(new ApplicationRoleCreatedEvent(role.Id, role.Name));
-
-            return string.Format(_t["Role {0} Created."], request.Name);
+            throw new InternalServerException(_t["Register role failed"], result.GetErrors(_t));
         }
-        else
+
+        if (request.Claims != null)
         {
-            // Update an existing role.
-            var role = await _roleManager.FindByIdAsync(request.Id);
-
-            _ = role ?? throw new NotFoundException(_t["Role Not Found"]);
-
-            if (AACSBRoles.IsDefault(role.Name))
+            var r = await _roleManager.FindByNameAsync(role.Name);
+            foreach (string claim in request.Claims)
             {
-                throw new ConflictException(string.Format(_t["Not allowed to modify {0} Role."], role.Name));
+                await _roleManager.AddClaimAsync(r, new Claim(AACSBClaims.Permission, claim));
             }
-
-            role.Name = request.Name;
-            role.NormalizedName = request.Name.ToUpperInvariant();
-            role.Description = request.Description;
-            var result = await _roleManager.UpdateAsync(role);
-
-            if (!result.Succeeded)
-            {
-                throw new InternalServerException(_t["Update role failed"], result.GetErrors(_t));
-            }
-
-            await _events.PublishAsync(new ApplicationRoleUpdatedEvent(role.Id, role.Name));
-
-            return string.Format(_t["Role {0} Updated."], role.Name);
         }
+
+        await _events.PublishAsync(new ApplicationRoleCreatedEvent(role.Id, role.Name));
+
+        return new MessageResponse(true, string.Format(_t["Role {0} Created."], request.Name));
+    }
+
+    public async Task<MessageResponse> UpdateAsync(UpdateRoleRequest request)
+    {
+        // Update an existing role.
+        var role = await _roleManager.FindByIdAsync(request.Id);
+
+        _ = role ?? throw new NotFoundException(_t["Role Not Found"]);
+
+        if (AACSBRoles.IsDefault(role.Name))
+        {
+            throw new ConflictException(string.Format(_t["Not allowed to modify {0} Role."], role.Name));
+        }
+
+        var currentClaims =
+            (await _roleManager.GetClaimsAsync(role)).Select(c => c.Value).ToList();
+        if (request.Claims?.Any() == true)
+        {
+            // find revoked claims
+            foreach (string c in currentClaims.Except(request.Claims))
+            {
+                await _roleManager.RemoveClaimAsync(role, new Claim(AACSBClaims.Permission, c));
+            }
+
+            // new assigned claims
+            foreach (string c in request.Claims.Except(currentClaims))
+            {
+                await _roleManager.AddClaimAsync(role, new Claim(AACSBClaims.Permission, c));
+            }
+        }
+
+        role.Name = request.Name;
+        role.NormalizedName = request.Name.ToUpperInvariant();
+        role.Description = request.Description;
+        var result = await _roleManager.UpdateAsync(role);
+
+        if (!result.Succeeded)
+        {
+            throw new InternalServerException(_t["Update role failed"], result.GetErrors(_t));
+        }
+
+        await _events.PublishAsync(new ApplicationRoleUpdatedEvent(role.Id, role.Name));
+
+        return new MessageResponse(true, string.Format(_t["Role {0} Updated."], role.Name));
     }
 
     public async Task<string> UpdatePermissionsAsync(UpdateRolePermissionsRequest request, CancellationToken cancellationToken)
