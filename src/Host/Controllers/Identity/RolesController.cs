@@ -64,7 +64,7 @@ public class RolesController : VersionNeutralApiController
     [HttpDelete("{id}")]
     [MustHavePermission(AACSBAction.Delete, AACSBResource.Roles)]
     [OpenApiOperation("Delete a role.", "")]
-    public Task<string> DeleteAsync(string id)
+    public Task<MessageResponse> DeleteAsync(string id)
     {
         return _roleService.DeleteAsync(id);
     }
