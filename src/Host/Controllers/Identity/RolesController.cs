@@ -19,15 +19,15 @@ public class RolesController : VersionNeutralApiController
     [HttpGet("{id}")]
     [MustHavePermission(AACSBAction.View, AACSBResource.Roles)]
     [OpenApiOperation("Get role details.", "")]
-    public Task<RoleDto> GetByIdAsync(string id)
+    public Task<RoleDetailDto> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        return _roleService.GetByIdAsync(id);
+        return _roleService.GetByIdWithPermissionsAsync(id, cancellationToken);
     }
 
     [HttpGet("{id}/permissions")]
     [MustHavePermission(AACSBAction.View, AACSBResource.RoleClaims)]
     [OpenApiOperation("Get role details with its permissions.", "")]
-    public Task<RoleDto> GetByIdWithPermissionsAsync(string id, CancellationToken cancellationToken)
+    public Task<RoleDetailDto> GetByIdWithPermissionsAsync(string id, CancellationToken cancellationToken)
     {
         return _roleService.GetByIdWithPermissionsAsync(id, cancellationToken);
     }
@@ -48,9 +48,17 @@ public class RolesController : VersionNeutralApiController
     [HttpPost]
     [MustHavePermission(AACSBAction.Create, AACSBResource.Roles)]
     [OpenApiOperation("Create or update a role.", "")]
-    public Task<string> RegisterRoleAsync(CreateOrUpdateRoleRequest request)
+    public Task<MessageResponse> RegisterRoleAsync(CreateRoleRequest request)
     {
-        return _roleService.CreateOrUpdateAsync(request);
+        return _roleService.CreateAsync(request);
+    }
+
+    [HttpPatch]
+    [MustHavePermission(AACSBAction.Update, AACSBResource.Roles)]
+    [OpenApiOperation("Update a role.", "")]
+    public Task<MessageResponse> UpdateRoleAsync(UpdateRoleRequest request)
+    {
+        return _roleService.UpdateAsync(request);
     }
 
     [HttpDelete("{id}")]
