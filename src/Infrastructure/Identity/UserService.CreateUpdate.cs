@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using AACSB.WebApi.Application.Common.Exceptions;
 using AACSB.WebApi.Application.Common.Mailing;
 using AACSB.WebApi.Application.Identity.Users;
@@ -109,17 +110,21 @@ internal partial class UserService
             FirstName = request.FirstName,
             LastName = request.LastName,
             UserName = request.UserName,
-            PhoneNumber = request.PhoneNumber,
-            IsActive = true
+            IsActive = request.IsActive
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        string passwordString = RandomPasswordString();
+        var result = await _userManager.CreateAsync(user, passwordString);
         if (!result.Succeeded)
         {
             throw new InternalServerException(_t["Validation Errors Occurred."], result.GetErrors(_t));
         }
 
-        await _userManager.AddToRoleAsync(user, AACSBRoles.Basic);
+        var u = await _userManager.FindByEmailAsync(user.Email);
+        foreach (string r in request.Roles)
+        {
+            await _userManager.AddToRoleAsync(u, r);
+        }
 
         var messages = new List<string> { string.Format(_t["User {0} Registered."], user.UserName) };
 
@@ -127,11 +132,12 @@ internal partial class UserService
         {
             // send verification email
             string emailVerificationUri = await GetEmailVerificationUriAsync(user, origin);
-            RegisterUserEmailModel eMailModel = new RegisterUserEmailModel()
+            var eMailModel = new RegisterUserEmailModel()
             {
                 Email = user.Email,
                 UserName = user.UserName,
-                Url = emailVerificationUri
+                Url = emailVerificationUri,
+                Password = passwordString
             };
             var mailRequest = new MailRequest(
                 new List<string> { user.Email },
@@ -182,5 +188,15 @@ internal partial class UserService
         {
             throw new InternalServerException(_t["Update profile failed"], result.GetErrors(_t));
         }
+    }
+
+    private string RandomPasswordString()
+    {
+        using var rngCryptoServiceProvider = RandomNumberGenerator.Create();
+        byte[] randomBytes = new byte[6];
+        rngCryptoServiceProvider.GetBytes(randomBytes);
+
+        // convert random bytes to hex string
+        return BitConverter.ToString(randomBytes).Replace("-", string.Empty);
     }
 }

@@ -12,9 +12,17 @@ public class UsersController : VersionNeutralApiController
     [HttpGet]
     [MustHavePermission(AACSBAction.View, AACSBResource.Users)]
     [OpenApiOperation("Get list of all users.", "")]
-    public Task<List<UserDetailsDto>> GetListAsync(CancellationToken cancellationToken)
+    public Task<List<UserListDto>> GetListAsync(CancellationToken cancellationToken)
     {
         return _userService.GetListAsync(cancellationToken);
+    }
+
+    [HttpPost("search")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.Users)]
+    [OpenApiOperation("Get list of all users with filter.", "")]
+    public Task<PaginationResponse<UserDetailsDto>> GetListByFilterAsync(UserListFilter filter, CancellationToken cancellationToken)
+    {
+        return _userService.SearchAsync(filter, cancellationToken);
     }
 
     [HttpGet("{id}")]
@@ -31,6 +39,23 @@ public class UsersController : VersionNeutralApiController
     public Task<List<UserRoleDto>> GetRolesAsync(string id, CancellationToken cancellationToken)
     {
         return _userService.GetRolesAsync(id, cancellationToken);
+    }
+
+    [MustHavePermission(AACSBAction.Update, AACSBResource.Users)]
+    [HttpPatch]
+    [OpenApiOperation("Edit a user's information.", "")]
+    public async Task EditUser(EditUserRequest user, CancellationToken cancellationToken)
+    {
+        await _userService.EditUserAsync(user, cancellationToken);
+    }
+
+    [MustHavePermission(AACSBAction.Delete, AACSBResource.Users)]
+    [HttpDelete("{id}")]
+    [OpenApiOperation("Delete a user.", "")]
+    public async Task<MessageResponse> DeleteUser(string id)
+    {
+        string userName = await _userService.DeleteUserAsync(id);
+        return new MessageResponse(true, $"Deleted User: {userName}");
     }
 
     [HttpPost("{id}/roles")]

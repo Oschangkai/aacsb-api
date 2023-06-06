@@ -11,11 +11,13 @@ public interface IUserService : ITransientService
     Task<bool> ExistsWithEmailAsync(string email, string? exceptId = null);
     Task<bool> ExistsWithPhoneNumberAsync(string phoneNumber, string? exceptId = null);
 
-    Task<List<UserDetailsDto>> GetListAsync(CancellationToken cancellationToken);
+    Task<List<UserListDto>> GetListAsync(CancellationToken cancellationToken);
 
     Task<int> GetCountAsync(CancellationToken cancellationToken);
 
     Task<UserDetailsDto> GetAsync(string userId, CancellationToken cancellationToken);
+    Task EditUserAsync(EditUserRequest user, CancellationToken cancellationToken);
+    Task<string> DeleteUserAsync(string userId);
 
     Task<List<UserRoleDto>> GetRolesAsync(string userId, CancellationToken cancellationToken);
     Task<string> AssignRolesAsync(string userId, UserRolesRequest request, CancellationToken cancellationToken);
