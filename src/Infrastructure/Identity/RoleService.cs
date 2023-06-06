@@ -190,7 +190,7 @@ internal class RoleService : IRoleService
         return _t["Permissions Updated."];
     }
 
-    public async Task<string> DeleteAsync(string id)
+    public async Task<MessageResponse> DeleteAsync(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
 
@@ -210,6 +210,6 @@ internal class RoleService : IRoleService
 
         await _events.PublishAsync(new ApplicationRoleDeletedEvent(role.Id, role.Name));
 
-        return string.Format(_t["Role {0} Deleted."], role.Name);
+        return new MessageResponse(true, string.Format(_t["Role {0} Deleted."], role.Name));
     }
 }
