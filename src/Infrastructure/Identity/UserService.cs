@@ -111,11 +111,11 @@ internal partial class UserService : IUserService
         }
     }
 
-    public async Task<List<UserDetailsDto>> GetListAsync(CancellationToken cancellationToken) =>
+    public async Task<List<UserListDto>> GetListAsync(CancellationToken cancellationToken) =>
         (await _userManager.Users
-                .AsNoTracking()
+            .AsNoTracking()
                 .ToListAsync(cancellationToken))
-            .Adapt<List<UserDetailsDto>>();
+            .Adapt<List<UserListDto>>();
 
     public Task<int> GetCountAsync(CancellationToken cancellationToken) =>
         _userManager.Users.AsNoTracking().CountAsync(cancellationToken);
@@ -129,7 +129,65 @@ internal partial class UserService : IUserService
 
         _ = user ?? throw new NotFoundException(_t["User Not Found."]);
 
-        return user.Adapt<UserDetailsDto>();
+        var role = await _userManager.GetRolesAsync(user);
+
+        var response = user.Adapt<UserDetailsDto>();
+        response.Roles = role.ToList();
+
+        return response;
+    }
+
+    public async Task EditUserAsync(EditUserRequest user, CancellationToken cancellationToken)
+    {
+        var currentUser = await _userManager.FindByIdAsync(user.Id);
+        if (currentUser == null)
+        {
+            throw new NotFoundException($"No User Registered with email: {user.Email}.");
+        }
+
+        var currentRoles = await _userManager.GetRolesAsync(currentUser);
+
+        // find revoked roles
+        foreach (string? r in currentRoles.Except(user.Roles))
+        {
+            await _userManager.RemoveFromRoleAsync(currentUser, r);
+        }
+
+        // new assigned roles
+        foreach (string? r in user.Roles.Except(currentRoles))
+        {
+            await _userManager.AddToRoleAsync(currentUser, r);
+        }
+
+        // update info
+        currentUser.FirstName = user.FirstName;
+        currentUser.LastName = user.LastName;
+        currentUser.EmailConfirmed = user.IsActive;
+        await _userManager.UpdateAsync(currentUser);
+        await _events.PublishAsync(new ApplicationUserUpdatedEvent(user.Id));
+    }
+
+    public async Task<string> DeleteUserAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            throw new NotFoundException($"No User Registered with id: {userId}.");
+        }
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, userRoles);
+
+        var userWithToken = await _userManager.Users
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefaultAsync(u => u.Id == userId && u.RefreshTokens != null);
+        if(userWithToken != null)
+        {
+            userWithToken.RefreshTokens!.Clear();
+        }
+
+        await _userManager.DeleteAsync(user);
+        return user.Email;
     }
 
     public async Task ToggleStatusAsync(ToggleUserStatusRequest request, CancellationToken cancellationToken)
