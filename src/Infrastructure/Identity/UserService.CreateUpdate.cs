@@ -109,7 +109,7 @@ internal partial class UserService
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            UserName = request.UserName,
+            UserName = request.Email,
             IsActive = request.IsActive
         };
 
