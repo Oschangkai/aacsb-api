@@ -13,8 +13,7 @@ public interface IDapperRepository : ITransientService
     /// <param name="transaction">The transaction to be performed.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>Returns <see cref="Task"/> of <see cref="IReadOnlyCollection{T}"/>.</returns>
-    Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
-        where T : class;
+    Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get a <typeparamref name="T"/> using raw sql string with parameters.
