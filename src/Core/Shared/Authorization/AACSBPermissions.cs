@@ -68,7 +68,8 @@ public static class AACSBPermissions
         new("Create Tenants", AACSBAction.Create, AACSBResource.Tenants, IsRoot: true),
         new("Update Tenants", AACSBAction.Update, AACSBResource.Tenants, IsRoot: true),
         new("Upgrade Tenant Subscription", AACSBAction.UpgradeSubscription, AACSBResource.Tenants, IsRoot: true),
-        new("Import Courses", AACSBAction.Import, AACSBResource.ReportData),
+        new("Import Report Data", AACSBAction.Import, AACSBResource.ReportData),
+        new("View Report Data", AACSBAction.View, AACSBResource.ReportData),
         new("View Report", AACSBAction.View, AACSBResource.Report),
     };
 

@@ -35,7 +35,7 @@ public class TableA31
     [MaxLength(80)]
     public string? Qualification { get; set; }
 
-    [Comment("P=Full Time, F=Part Time, C=Contractual")]
+    [Comment("P=Full Time, S=Part Time, C=Contractual")]
     [MaxLength(10)]
     public string? WorkType { get; set; }
 
