@@ -27,7 +27,7 @@ public static class AACSBResource
     public const string RoleClaims = nameof(RoleClaims);
     public const string Products = nameof(Products);
     public const string Brands = nameof(Brands);
-    public const string Courses = nameof(Courses);
+    public const string ReportData = nameof(ReportData);
     public const string Report = nameof(Report);
 }
 
@@ -68,7 +68,7 @@ public static class AACSBPermissions
         new("Create Tenants", AACSBAction.Create, AACSBResource.Tenants, IsRoot: true),
         new("Update Tenants", AACSBAction.Update, AACSBResource.Tenants, IsRoot: true),
         new("Upgrade Tenant Subscription", AACSBAction.UpgradeSubscription, AACSBResource.Tenants, IsRoot: true),
-        new("Import Courses", AACSBAction.Import, AACSBResource.Courses),
+        new("Import Courses", AACSBAction.Import, AACSBResource.ReportData),
         new("View Report", AACSBAction.View, AACSBResource.Report),
     };
 
