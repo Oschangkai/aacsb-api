@@ -14,6 +14,8 @@ namespace Migrators.MSSQL.Migrations.Application
                 "SELECT\n" +
                     "c.[Name] AS Course," +
                     "c.[Id] AS CourseId," +
+                    "c.[Code] AS CourseCode," +
+                    "c.[Time] AS CourseTime," +
                     "t.[Name] AS Teacher," +
                     "t.[Id] AS TeacherId," +
                     "t.[EnglishName] AS TeacherEnglishName," +
@@ -44,6 +46,8 @@ namespace Migrators.MSSQL.Migrations.Application
                 "SELECT\n" +
                     "Course," +
                     "CourseId," +
+                    "CourseCode," +
+                    "CourseTime," +
                     "Teacher," +
                     "TeacherId," +
                     "TeacherEnglishName," +

@@ -1,14 +1,20 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace AACSB.WebApi.Domain.ReportGenerator.View;
 
+[Table("TableA31Course", Schema="ReportGenerator")]
 public class TableA31Course
 {
     [MaxLength(200)]
     public string? Course { get; set; }
 
     public Guid? CourseId { get; set; }
+
+    public string? CourseCode { get; set; }
+
+    public string? CourseTime { get; set; }
 
     [MaxLength(80)]
     public string? Teacher { get; set; }
@@ -38,7 +44,7 @@ public class TableA31Course
 
     public Guid? QualificationId { get; set; }
 
-    [Comment("P=Full Time, F=Part Time, C=Contractual")]
+    [Comment("P=Full Time, S=Part Time, C=Contractual")]
     [MaxLength(10)]
     public string? WorkType { get; set; }
 

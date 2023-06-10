@@ -38,5 +38,17 @@ public partial class ApplicationDbContext : BaseDbContext
                 typeof(ApplicationDbContext).GetMethod(nameof(GetTeacherDiscipline), new[] { typeof(string) })!)
             .HasName("F_GetTeacherDiscipline")
             .HasParameter("SemesterYear").HasStoreType("nvarchar(3)");
+
+        modelBuilder.Entity<TableA32>().HasNoKey();
+        modelBuilder
+            .HasDbFunction(
+                typeof(ApplicationDbContext).GetMethod(nameof(GetQualificationPercentage), new[] { typeof(string), typeof(string) })!,
+                builder =>
+                {
+                    builder.HasName("F_GetQualificationPercentage");
+                    builder.HasSchema(nameof(TableA32));
+                    builder.HasParameter("Semester").HasStoreType("varchar(4)");
+                    builder.HasParameter("Type").HasStoreType("varchar(10)");
+                });
     }
 }

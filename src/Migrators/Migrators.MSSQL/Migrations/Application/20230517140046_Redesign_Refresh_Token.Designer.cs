@@ -329,44 +329,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.HasAnnotation("Finbuckle:MultiTenant", true);
                 });
 
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.Function.TableA31", b =>
-                {
-                    b.Property<string>("Degree")
-                        .HasMaxLength(42)
-                        .HasColumnType("nvarchar(42)");
-
-                    b.Property<decimal>("Discipline")
-                        .HasPrecision(2)
-                        .HasColumnType("decimal(2,0)");
-
-                    b.Property<decimal?>("DisciplineTotal")
-                        .HasPrecision(38, 15)
-                        .HasColumnType("decimal(38,15)");
-
-                    b.Property<string>("Qualification")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("Responsibilities")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("MT/RES/... 可以為多值");
-
-                    b.Property<string>("Teacher")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("WorkType")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasComment("P=Full Time, F=Part Time, C=Contractual");
-
-                    b.ToTable("TableA31", "Catalog");
-                });
-
             modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.ImportSignature", b =>
                 {
                     b.Property<Guid>("Id")
@@ -676,76 +638,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.ToTable("Teachers", "ReportGenerator");
 
                     b.HasAnnotation("Finbuckle:MultiTenant", true);
-                });
-
-            modelBuilder.Entity("AACSB.WebApi.Domain.ReportGenerator.View.TableA31Course", b =>
-                {
-                    b.Property<string>("Course")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("CourseDepartment")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<Guid?>("CourseDepartmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("Credit")
-                        .HasPrecision(6, 4)
-                        .HasColumnType("decimal(6,4)");
-
-                    b.Property<string>("Degree")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<decimal?>("DegreeYear")
-                        .HasPrecision(4)
-                        .HasColumnType("decimal(4,0)");
-
-                    b.Property<decimal>("Discipline")
-                        .HasPrecision(2)
-                        .HasColumnType("decimal(2,0)");
-
-                    b.Property<Guid?>("DisciplineId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Qualification")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<Guid?>("QualificationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Responsibilities")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("MT/RES/... 可以為多值");
-
-                    b.Property<decimal?>("Semester")
-                        .HasPrecision(5)
-                        .HasColumnType("decimal(5,0)");
-
-                    b.Property<string>("Teacher")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("TeacherEnglishName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid?>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("WorkType")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasComment("P=Full Time, F=Part Time, C=Contractual");
-
-                    b.ToView("V_Table_A31_Course", "ReportGenerator");
                 });
 
             modelBuilder.Entity("AACSB.WebApi.Infrastructure.Auditing.Trail", b =>
