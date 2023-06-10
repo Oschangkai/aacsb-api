@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace AACSB.WebApi.Domain.ReportGenerator.Function;
 
+[Table("TableA31", Schema="ReportGenerator")]
 public class TableA31
 {
     [Precision(4, 2)]
