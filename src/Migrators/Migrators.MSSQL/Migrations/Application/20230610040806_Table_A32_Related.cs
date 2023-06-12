@@ -64,7 +64,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 ")\n" +
                 "SELECT\n" +
                     "qp.Qualification,\n" +
-                    "CAST(ROUND(qp.Percentage, 3) AS DECIMAL(2,2)) AS Percentage\n" +
+                    "CAST(ROUND(qp.Percentage, 3) AS DECIMAL(3,2)) AS Percentage\n" +
                 "FROM\n" +
                     "QualificationPercentage qp;";
             migrationBuilder.Sql(func);
