@@ -42,13 +42,14 @@ public partial class ApplicationDbContext : BaseDbContext
         modelBuilder.Entity<TableA32>().HasNoKey();
         modelBuilder
             .HasDbFunction(
-                typeof(ApplicationDbContext).GetMethod(nameof(GetQualificationPercentage), new[] { typeof(string), typeof(string) })!,
+                typeof(ApplicationDbContext).GetMethod(nameof(GetQualificationPercentage), new[] { typeof(string), typeof(string), typeof(Guid) })!,
                 builder =>
                 {
                     builder.HasName("F_GetQualificationPercentage");
                     builder.HasSchema(nameof(TableA32));
                     builder.HasParameter("Semester").HasStoreType("varchar(4)");
                     builder.HasParameter("Type").HasStoreType("varchar(10)");
+                    builder.HasParameter("DepartmentId").HasStoreType("uniqueidentifier");
                 });
     }
 }

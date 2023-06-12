@@ -10,7 +10,7 @@ namespace Migrators.MSSQL.Migrations.Application
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             const string func =
-                "CREATE OR ALTER FUNCTION [ReportGenerator].[F_GetQualificationPercentage](@Semester VARCHAR(4), @Type VARCHAR(10))\n" +
+                "CREATE OR ALTER FUNCTION [ReportGenerator].[F_GetQualificationPercentage](@Semester VARCHAR(4), @Type VARCHAR(10), @CourseDepartmentId uniqueidentifier = NULL)\n" +
                 "RETURNS TABLE\n" +
                 "AS\n" +
                 "RETURN\n" +
@@ -55,6 +55,10 @@ namespace Migrators.MSSQL.Migrations.Application
                                 ")\n" +
                             "))\n" +
                         ")\n" +
+                        "AND (\n" +
+                            "@CourseDepartmentId IS NULL\n" +
+                            "OR c.CourseDepartmentId = @CourseDepartmentId\n" +
+                        ")" +
                     "GROUP BY\n" +
                         "q.[Abbreviation]\n" +
                 ")\n" +

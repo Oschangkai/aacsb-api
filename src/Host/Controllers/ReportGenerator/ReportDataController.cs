@@ -28,4 +28,12 @@ public class ReportDataController : VersionedApiController
     {
         return Mediator.Send(new GetTableA31AcademicYearRequest());
     }
+
+    [HttpGet("department")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get Departments", "")]
+    public Task<List<DepartmentDto>> GetDepartments()
+    {
+        return Mediator.Send(new GetDepartmentsRequest());
+    }
 }

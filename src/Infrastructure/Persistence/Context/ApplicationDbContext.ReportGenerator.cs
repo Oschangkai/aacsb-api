@@ -38,6 +38,6 @@ public partial class ApplicationDbContext
         => throw new NotSupportedException($"{nameof(GetTeacherDiscipline)} cannot be called client side");
 
     [DbFunction("F_GetQualificationPercentage", nameof(SchemaNames.ReportGenerator))]
-    public IQueryable<TableA32>? GetQualificationPercentage(string @Semester, string @Type)
+    public IQueryable<TableA32>? GetQualificationPercentage(string @Semester, string @Type, Guid @DepartmentId)
         => throw new NotSupportedException($"{nameof(GetQualificationPercentage)} cannot be called client side");
 }
