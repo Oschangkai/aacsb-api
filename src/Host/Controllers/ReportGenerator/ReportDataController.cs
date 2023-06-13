@@ -22,9 +22,17 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpGet("semester")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get semesters from database.", "")]
+    public Task<int[]> GetSemesters()
+    {
+        return Mediator.Send(new GetSemesterRequest());
+    }
+
     [HttpGet("discipline")]
     [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
-    [OpenApiOperation("Get Disciplines", "")]
+    [OpenApiOperation("Get Disciplines from database.", "")]
     public Task<List<DisciplineDto>> GetDisciplines()
     {
         return Mediator.Send(new GetDisciplinesRequest());
