@@ -1,6 +1,6 @@
 using AACSB.WebApi.Domain.ReportGenerator.Function;
 
-namespace AACSB.WebApi.Application.ReportGenerator;
+namespace AACSB.WebApi.Application.ReportGenerator.Reports;
 
 public class GetTableA31Request : IRequest<ICollection<TableA31>>
 {
