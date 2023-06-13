@@ -17,6 +17,8 @@ public class DapperRepository : IDapperRepository
      =>
         (await _dbContext.Connection.QueryAsync<T>(sql, param, transaction))
             .AsList();
+    public async Task QueryAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+        => await _dbContext.Connection.QueryAsync(sql, param, transaction);
 
     public async Task<T?> QueryFirstOrDefaultAsync<T>(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
     where T : class
