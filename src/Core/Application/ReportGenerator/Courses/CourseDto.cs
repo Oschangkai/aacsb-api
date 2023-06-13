@@ -6,8 +6,7 @@ public class CourseDto : IDto
     public decimal Semester { get; set; }
     public string? Code { get; set; }
     public string? Name { get; set; }
-    public decimal? Credit { get; set; }
-    public string? Time { get; set; }
+    public Guid? DepartmentId { get; set; }
     public Guid DisciplineId { get; set; }
     public Guid ImportSignatureId { get; set; }
 }

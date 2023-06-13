@@ -1,6 +1,7 @@
 using AACSB.WebApi.Application.ReportGenerator;
 using AACSB.WebApi.Application.ReportGenerator.Courses;
 using AACSB.WebApi.Application.ReportGenerator.Reports;
+using AACSB.WebApi.Application.ReportGenerator.Teachers;
 
 namespace AACSB.WebApi.Host.Controllers.ReportGenerator;
 
@@ -44,6 +45,14 @@ public class ReportDataController : VersionedApiController
     public Task<int[]> GetSemesters()
     {
         return Mediator.Send(new GetSemesterRequest());
+    }
+
+    [HttpPost("teacher/search")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Search teachers from database.", "")]
+    public Task<PaginationResponse<TeacherDto>> SearchTeachers(SearchTeachersRequest request)
+    {
+        return Mediator.Send(request);
     }
 
     [HttpGet("discipline")]
