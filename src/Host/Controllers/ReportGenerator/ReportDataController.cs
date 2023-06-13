@@ -23,6 +23,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpPatch("course")]
+    [MustHavePermission(AACSBAction.Update, AACSBResource.ReportData)]
+    [OpenApiOperation("Update course information.", "")]
+    public Task<MessageResponse> UpdateCourse(UpdateCourseRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpDelete("course")]
     [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
     [OpenApiOperation("delete courses from database by semester.", "")]
