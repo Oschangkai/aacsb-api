@@ -63,6 +63,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpPatch("teacher")]
+    [MustHavePermission(AACSBAction.Update, AACSBResource.ReportData)]
+    [OpenApiOperation("Update teacher information.", "")]
+    public Task<MessageResponse> UpdateTeacher(UpdateTeacherRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpGet("discipline")]
     [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
     [OpenApiOperation("Get Disciplines from database.", "")]
