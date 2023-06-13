@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using AACSB.WebApi.Application.ReportGenerator;
+using AACSB.WebApi.Application.ReportGenerator.Reports;
 using AACSB.WebApi.Domain.ReportGenerator.Function;
 
 namespace AACSB.WebApi.Host.Controllers.ReportGenerator;

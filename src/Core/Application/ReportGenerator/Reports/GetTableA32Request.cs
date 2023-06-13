@@ -1,6 +1,6 @@
 using AACSB.WebApi.Domain.ReportGenerator.Function;
 
-namespace AACSB.WebApi.Application.ReportGenerator;
+namespace AACSB.WebApi.Application.ReportGenerator.Reports;
 
 public class GetTableA32Request : IRequest<ICollection<TableA32>>
 {

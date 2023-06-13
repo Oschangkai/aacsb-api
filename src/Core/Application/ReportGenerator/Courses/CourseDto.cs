@@ -1,13 +1,10 @@
-namespace AACSB.WebApi.Application.ReportGenerator;
+namespace AACSB.WebApi.Application.ReportGenerator.Course;
 
-public class CourseDto
+public class CourseDto : IDto
 {
     public decimal Semester { get; set; }
     public string Code { get; set; }
     public string Name { get; set; }
-    public string EnglishName { get; set; }
     public decimal Credit { get; set; }
-    public bool Required { get; set; }
-    public bool Year { get; set; }
     public string Time { get; set; }
 }

@@ -1,4 +1,4 @@
-namespace AACSB.WebApi.Application.ReportGenerator;
+namespace AACSB.WebApi.Application.ReportGenerator.Reports;
 
 public class GetTableA31AcademicYearRequest : IRequest<int[]>
 {
