@@ -41,7 +41,8 @@ namespace Migrators.MSSQL.Migrations.Application
                 "LEFT JOIN [ReportGenerator].[Departments] d ON c.[DepartmentId] = d.Id\n" +
                 "WHERE t.Name <> ''\n" +
                     "AND c.Credit > 0\n" +
-                    "AND (c.Credit % 1) = 0" +
+                    "AND (c.Credit % 1) = 0\n" +
+                    "AND c.DeletedOn IS NULL\n" +
                 ")" +
                 "SELECT\n" +
                     "Course," +
