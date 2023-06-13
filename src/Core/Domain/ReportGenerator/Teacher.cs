@@ -13,14 +13,13 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [MaxLength(200)]
     public string? NameInNtustCourse { get; set; }
 
-    [Comment("SA/IP/...，單一值")]
-    [MaxLength(10)]
+    public Guid? QualificationId { get; set; }
     public Qualification? Qualification { get; set; }
 
     [MaxLength(15)]
     public string? WorkType { get; set; }
 
-    [Comment("P=Full Time, F=Part Time, C=Contractual")]
+    [Comment("P=Full Time, S=Part Time, C=Contractual")]
     [MaxLength(10)]
     public string? WorkTypeAbbr { get; set; }
 
@@ -36,7 +35,7 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [Precision(4, 0)]
     public decimal? DegreeYear { get; set; }
 
-    [MaxLength(100)]
+    public Guid? DepartmentId { get; set; }
     public Department? Department { get; set; }
 
     [Comment("MT/RES/... 可以為多值")]
