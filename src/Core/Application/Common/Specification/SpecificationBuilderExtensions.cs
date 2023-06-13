@@ -48,7 +48,7 @@ public static class SpecificationBuilderExtensions
         {
             if (search.Fields?.Any() is true)
             {
-                // search seleted fields (can contain deeper nested fields)
+                // search selected fields (can contain deeper nested fields)
                 foreach (string field in search.Fields)
                 {
                     var paramExpr = Expression.Parameter(typeof(T));

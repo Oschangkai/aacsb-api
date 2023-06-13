@@ -1,10 +1,19 @@
 using AACSB.WebApi.Application.ReportGenerator;
-using AACSB.WebApi.Domain.ReportGenerator;
+using AACSB.WebApi.Application.ReportGenerator.Courses;
+using AACSB.WebApi.Application.ReportGenerator.Reports;
 
 namespace AACSB.WebApi.Host.Controllers.ReportGenerator;
 
 public class ReportDataController : VersionedApiController
 {
+    [HttpPost("course/search")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Search courses from database.", "")]
+    public Task<PaginationResponse<CourseDto>> SearchCourses(SearchCoursesRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpPost("course/collect")]
     [MustHavePermission(AACSBAction.Import, AACSBResource.ReportData)]
     [OpenApiOperation("Fetch courses from NTUST.", "")]
