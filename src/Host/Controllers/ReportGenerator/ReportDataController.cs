@@ -32,17 +32,17 @@ public class ReportDataController : VersionedApiController
     }
 
     [HttpDelete("course")]
-    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [MustHavePermission(AACSBAction.Delete, AACSBResource.ReportData)]
     [OpenApiOperation("delete courses from database by semester.", "")]
-    public Task<MessageResponse> DeleteCourseBySemester(DeleteCoursesRequest request)
+    public Task<MessageResponse> DeleteCoursesBySemester(DeleteCoursesRequest request)
     {
         return Mediator.Send(request);
     }
 
     [HttpDelete("course/{id}")]
-    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [MustHavePermission(AACSBAction.Delete, AACSBResource.ReportData)]
     [OpenApiOperation("mark deleted a course.", "")]
-    public Task<MessageResponse> DeleteCourseBySemester(Guid id)
+    public Task<MessageResponse> DeleteCourseById(Guid id)
     {
         return Mediator.Send(new DeleteCourseRequest(id));
     }
@@ -69,6 +69,14 @@ public class ReportDataController : VersionedApiController
     public Task<MessageResponse> UpdateTeacher(UpdateTeacherRequest request)
     {
         return Mediator.Send(request);
+    }
+
+    [HttpDelete("teacher/{id}")]
+    [MustHavePermission(AACSBAction.Delete, AACSBResource.ReportData)]
+    [OpenApiOperation("mark deleted a teacher.", "")]
+    public Task<MessageResponse> DeleteTeacherById(Guid id)
+    {
+        return Mediator.Send(new DeleteTeacherRequest(id));
     }
 
     [HttpGet("discipline")]
