@@ -40,6 +40,17 @@ namespace Migrators.MSSQL.Migrations.Application
                 "LEFT JOIN [ReportGenerator].[Qualifications] q ON t.QualificationId = q.Id\n" +
                 "LEFT JOIN [ReportGenerator].[Departments] d ON c.[DepartmentId] = d.Id\n" +
                 "WHERE t.Name <> ''\n" +
+                    "AND c.Name NOT LIKE N'%專題研究%'\n" +
+                    "AND c.Name NOT LIKE N'%專題研討%'\n" +
+                    "AND c.Name NOT LIKE N'%實務專題%'\n" +
+                    "AND c.Name NOT LIKE N'%管理實務%'\n" +
+                    "AND c.Name NOT LIKE N'%經營實務%'\n" +
+                    "AND c.Name NOT LIKE N'%書報研討%'\n" +
+                    "AND c.Name NOT LIKE N'%企業研習%'\n" +
+                    "AND c.Name NOT LIKE N'%實習%'\n" +
+                    "AND c.Name NOT LIKE N'%精英講座%'\n" +
+                    "AND c.Name NOT LIKE N'%論文導讀%'\n" +
+                    "AND c.Time IS NOT NULL\n" +
                     "AND c.Credit > 0\n" +
                     "AND (c.Credit % 1) = 0\n" +
                     "AND c.DeletedOn IS NULL\n" +
