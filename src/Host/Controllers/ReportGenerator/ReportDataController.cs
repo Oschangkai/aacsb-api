@@ -102,4 +102,12 @@ public class ReportDataController : VersionedApiController
     {
         return Mediator.Send(new GetDepartmentsRequest());
     }
+
+    [HttpGet("qualification")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get Qualifications", "")]
+    public Task<List<QualificationDto>> GetQualifications()
+    {
+        return Mediator.Send(new GetQualificationsRequest());
+    }
 }
