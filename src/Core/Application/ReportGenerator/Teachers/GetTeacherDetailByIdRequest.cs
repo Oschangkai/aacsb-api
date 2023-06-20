@@ -27,8 +27,8 @@ public class GetTeacherDetailByIdRequestHandler : IRequestHandler<GetTeacherDeta
 
     public async Task<TeacherDetailDto> Handle(GetTeacherDetailByIdRequest request, CancellationToken cancellationToken)
     {
-
         return (await _repository.GetByIdAsync(request.Id, cancellationToken)
-                ?? throw new NotFoundException($"Teacher with id {request.Id} Not Found.")).Adapt<TeacherDetailDto>();
+                ?? throw new NotFoundException($"Teacher with id {request.Id} Not Found."))
+            .Adapt<TeacherDetailDto>();
     }
 }

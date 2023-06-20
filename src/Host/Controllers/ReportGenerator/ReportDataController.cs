@@ -15,6 +15,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpGet("course/{id}")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get a Course By Id.", "")]
+    public Task<CourseDetailDto> GetCourseDetailById(Guid id)
+    {
+        return Mediator.Send(new GetCourseDetailByIdRequest(id));
+    }
+
     [HttpPost("course/collect")]
     [MustHavePermission(AACSBAction.Import, AACSBResource.ReportData)]
     [OpenApiOperation("Fetch courses from NTUST.", "")]
