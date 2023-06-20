@@ -39,11 +39,11 @@ public class UpdateTeacherRequestHandler : IRequestHandler<UpdateTeacherRequest,
         var teacher = await _repository.GetByIdAsync(request.Id, cancellationToken);
         _ = teacher ?? throw new NotFoundException($"Teacher with id {request.Id} Not Found.");
 
-        if (request.Name is not null && request.Name != teacher!.Name)
+        if (request.Name is not null && request.Name != teacher.Name)
             teacher.Name = request.Name;
-        if (request.DepartmentId is not null && request.DepartmentId != teacher!.DepartmentId!)
+        if (request.DepartmentId != teacher.DepartmentId)
             teacher.DepartmentId = request.DepartmentId;
-        if (request.WorkTypeAbbr is not null && request.WorkTypeAbbr != teacher!.WorkTypeAbbr)
+        if (request.WorkTypeAbbr != teacher.WorkTypeAbbr)
         {
             teacher.WorkTypeAbbr = request.WorkTypeAbbr;
             teacher.WorkType = request.WorkTypeAbbr switch
@@ -54,21 +54,21 @@ public class UpdateTeacherRequestHandler : IRequestHandler<UpdateTeacherRequest,
             };
         }
 
-        if (request.EnglishName is not null && request.EnglishName != teacher!.EnglishName)
+        if (request.EnglishName != teacher.EnglishName)
             teacher.EnglishName = request.EnglishName;
-        if (request.Degree is not null && request.Degree != teacher!.Degree)
+        if (request.Degree != teacher.Degree)
             teacher.Degree = request.Degree;
-        if (request.DegreeYear is not null && request.DegreeYear != teacher!.DegreeYear)
+        if (request.DegreeYear != teacher.DegreeYear)
             teacher.DegreeYear = request.DegreeYear;
-        if (request.Email is not null && request.Email != teacher!.Email)
+        if (request.Email != teacher.Email)
             teacher.Email = request.Email;
-        if (request.QualificationId is not null && request.QualificationId != teacher!.QualificationId)
+        if (request.QualificationId != teacher.QualificationId)
             teacher.QualificationId = request.QualificationId;
-        if (request.ResignDate is not null && request.ResignDate != teacher!.ResignDate)
+        if (request.ResignDate != teacher.ResignDate)
             teacher.ResignDate = request.ResignDate;
-        if (request.Title is not null && request.Title != teacher!.Title)
+        if (request.Title != teacher.Title)
             teacher.Title = request.Title;
-        if (request.Responsibilities is not null && request.Responsibilities != teacher!.Responsibilities)
+        if (request.Responsibilities != teacher!.Responsibilities)
             teacher.Responsibilities = request.Responsibilities;
 
         await _repository.UpdateAsync(teacher!, cancellationToken);

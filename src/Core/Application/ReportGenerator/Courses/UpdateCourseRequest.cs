@@ -29,13 +29,14 @@ public class UpdateCourseRequestHandler : IRequestHandler<UpdateCourseRequest, M
     public async Task<MessageResponse> Handle(UpdateCourseRequest request, CancellationToken cancellationToken)
     {
         var course = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        _ = course ?? throw new NotFoundException($"Course with id {request.Id} Not Found.");
 
         if (request.Credit is not null && request.Credit != course!.Credit)
             course.Credit = request.Credit.Value;
         if (request.DepartmentId is not null && request.DepartmentId != course!.DepartmentId)
             course.DepartmentId = request.DepartmentId.Value;
-        if (request.DisciplineId is not null && request.DisciplineId != course!.DisciplineId)
-            course.DisciplineId = request.DisciplineId.Value;
+        if (request.DisciplineId != course.DisciplineId)
+            course.DisciplineId = request.DisciplineId;
 
         await _repository.UpdateAsync(course!, cancellationToken);
         return new MessageResponse(true, $"Updated Course {course!.Code} {course.Name}");
