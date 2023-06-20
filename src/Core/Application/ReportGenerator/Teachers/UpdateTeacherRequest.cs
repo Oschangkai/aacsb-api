@@ -37,13 +37,23 @@ public class UpdateTeacherRequestHandler : IRequestHandler<UpdateTeacherRequest,
     public async Task<MessageResponse> Handle(UpdateTeacherRequest request, CancellationToken cancellationToken)
     {
         var teacher = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        _ = teacher ?? throw new NotFoundException($"Teacher with id {request.Id} Not Found.");
 
         if (request.Name is not null && request.Name != teacher!.Name)
             teacher.Name = request.Name;
         if (request.DepartmentId is not null && request.DepartmentId != teacher!.DepartmentId!)
             teacher.DepartmentId = request.DepartmentId;
         if (request.WorkTypeAbbr is not null && request.WorkTypeAbbr != teacher!.WorkTypeAbbr)
+        {
             teacher.WorkTypeAbbr = request.WorkTypeAbbr;
+            teacher.WorkType = request.WorkTypeAbbr switch
+            {
+                "P" => "FullTime",
+                "S" => "PartTime",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
         if (request.EnglishName is not null && request.EnglishName != teacher!.EnglishName)
             teacher.EnglishName = request.EnglishName;
         if (request.Degree is not null && request.Degree != teacher!.Degree)
