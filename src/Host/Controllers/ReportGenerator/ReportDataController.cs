@@ -71,6 +71,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpGet("teacher/{id}")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get Teacher Detail By Id.", "")]
+    public Task<TeacherDetailDto> GetTeacherDetailById(Guid id)
+    {
+        return Mediator.Send(new GetTeacherDetailByIdRequest(id));
+    }
+
     [HttpDelete("teacher/{id}")]
     [MustHavePermission(AACSBAction.Delete, AACSBResource.ReportData)]
     [OpenApiOperation("mark deleted a teacher.", "")]
