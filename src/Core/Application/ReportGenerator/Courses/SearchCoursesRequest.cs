@@ -9,7 +9,10 @@ public class CoursesBySearchRequestSpec : EntitiesByPaginationFilterSpec<Course,
 {
     public CoursesBySearchRequestSpec(SearchCoursesRequest request)
         : base(request) =>
-        Query.OrderBy(c => c.Name, !request.HasOrderBy());
+
+        // Default order by semester descending
+        Query
+            .OrderByDescending(c => c.Semester, !request.HasOrderBy());
 }
 
 public class SearchCoursesRequestHandler : IRequestHandler<SearchCoursesRequest, PaginationResponse<CourseDto>>
