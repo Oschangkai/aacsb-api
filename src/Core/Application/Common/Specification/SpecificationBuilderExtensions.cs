@@ -245,7 +245,7 @@ public static class SpecificationBuilderExtensions
             return Expression.Constant(valueparsed, propertyType);
         }
 
-        if (propertyType == typeof(Guid))
+        if (propertyType == typeof(Guid) || propertyType == typeof(Guid?))
         {
             string? stringGuid = GetStringFromJsonElement(value);
 
