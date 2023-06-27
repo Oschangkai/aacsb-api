@@ -342,10 +342,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(100)")
                         .HasComment("MT/RES/... 可以為多值，以逗點分割");
 
-                    b.Property<string>("WorkType")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
                     b.Property<string>("WorkTypeAbbr")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")

@@ -118,7 +118,6 @@ namespace Migrators.MSSQL.Migrations.Application
                     Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     Qualification = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "SA/IP/...，單一值"),
                     DepartmentAbbr = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "IM/FM/...，單一值"),
-                    WorkType = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     WorkTypeAbbr = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true, comment: "P=Full Time, F=Part Time, C=Contractual"),
                     EnglishName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Degree = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),

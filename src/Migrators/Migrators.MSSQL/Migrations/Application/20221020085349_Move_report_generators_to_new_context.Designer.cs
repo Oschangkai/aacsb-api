@@ -368,10 +368,6 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("WorkType")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
                     b.Property<string>("WorkTypeAbbr")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
