@@ -30,7 +30,7 @@ public class GetMissingDataTeachersRequestHandler : IRequestHandler<GetMissingDa
 
     public async Task<List<ATeacherDto>> Handle(GetMissingDataTeachersRequest request, CancellationToken cancellationToken)
     {
-        string sql = "SELECT DISTINCT [Teacher], [TeacherEnglishName], [Degree], [DegreeYear], [Responsibilities], [Qualification]" +
+        string sql = "SELECT DISTINCT [Teacher], [TeacherEnglishName], [Degree], [DegreeYear], [Responsibilities], [Qualification], [TeacherId]" +
                      " FROM [ReportGenerator].[V_Table_A31_Course]" +
                      " WHERE ([Semester] = @StartSemester OR [Semester] = @EndSemester)";
         sql += request.Column.ToLower() switch
