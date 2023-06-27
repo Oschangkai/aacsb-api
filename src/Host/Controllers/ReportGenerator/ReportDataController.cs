@@ -31,6 +31,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpPost("course/inspect")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get Null Discipline Courses by Academic Year", "")]
+    public Task<List<ACourseDto>> InspectCourses(GetNullDisciplineCoursesRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpPatch("course")]
     [MustHavePermission(AACSBAction.Update, AACSBResource.ReportData)]
     [OpenApiOperation("Update course information.", "")]
