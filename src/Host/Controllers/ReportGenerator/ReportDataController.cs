@@ -2,11 +2,20 @@ using AACSB.WebApi.Application.ReportGenerator;
 using AACSB.WebApi.Application.ReportGenerator.Courses;
 using AACSB.WebApi.Application.ReportGenerator.Reports;
 using AACSB.WebApi.Application.ReportGenerator.Teachers;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace AACSB.WebApi.Host.Controllers.ReportGenerator;
 
 public class ReportDataController : VersionedApiController
 {
+    [HttpPost("course/a31")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get courses by teacher.", "")]
+    public Task<List<ACourseDto>> SearchA31Courses(GetTeacherCoursesRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpPost("course/search")]
     [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
     [OpenApiOperation("Search courses from database.", "")]
@@ -69,6 +78,14 @@ public class ReportDataController : VersionedApiController
     public Task<int[]> GetSemesters()
     {
         return Mediator.Send(new GetSemesterRequest());
+    }
+
+    [HttpPost("teacher/a31/list")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Search A31 teachers from database.", "")]
+    public Task<List<ASimpleTeacherDto>> ListA31Teachers(GetATeachersBySemesterRequest request)
+    {
+        return Mediator.Send(request);
     }
 
     [HttpPost("teacher/search")]
