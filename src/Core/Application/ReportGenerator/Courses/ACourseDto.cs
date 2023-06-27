@@ -8,4 +8,6 @@ public class ACourseDto
     public string? TeacherEnglishName { get; set; }
     public string? CourseDepartment { get; set; }
     public decimal Semester { get; set; }
+    public Guid CourseId { get; set; }
+    public Guid? TeacherId { get; set; }
 }

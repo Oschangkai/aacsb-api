@@ -8,4 +8,5 @@ public class ATeacherDto
     public decimal? DegreeYear { get; set; }
     public string? Responsibilities { get; set; }
     public string? Qualification { get; set; }
+    public Guid TeacherId { get; set; }
 }

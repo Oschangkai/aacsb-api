@@ -23,7 +23,7 @@ public class GetNullDisciplineCoursesRequestHandler : IRequestHandler<GetNullDis
 
     public async Task<List<ACourseDto>> Handle(GetNullDisciplineCoursesRequest request, CancellationToken cancellationToken)
     {
-        const string sql = "SELECT [Course], [CourseCode], [Teacher], [TeacherEnglishName], [CourseDepartment], [Semester]" +
+        const string sql = "SELECT [Course], [CourseCode], [Teacher], [TeacherEnglishName], [CourseDepartment], [Semester], [CourseId], [TeacherId]" +
             " FROM [ReportGenerator].[V_Table_A31_Course]" +
             " WHERE ([Semester] = @StartSemester OR [Semester] = @EndSemester)" +
             " AND [Discipline] IS NULL";
