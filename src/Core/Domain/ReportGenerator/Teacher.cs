@@ -16,9 +16,6 @@ public class Teacher : AuditableEntity, IAggregateRoot
     public Guid? QualificationId { get; set; }
     public Qualification? Qualification { get; set; }
 
-    [MaxLength(15)]
-    public string? WorkType { get; set; }
-
     [Comment("P=Full Time, S=Part Time, C=Contractual")]
     [MaxLength(10)]
     public string? WorkTypeAbbr { get; set; }

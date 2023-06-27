@@ -45,11 +45,10 @@ public class UpdateTeacherRequestHandler : IRequestHandler<UpdateTeacherRequest,
             teacher.DepartmentId = request.DepartmentId;
         if (request.WorkTypeAbbr != teacher.WorkTypeAbbr)
         {
-            teacher.WorkTypeAbbr = request.WorkTypeAbbr;
-            teacher.WorkType = request.WorkTypeAbbr switch
+            teacher.WorkTypeAbbr = request.WorkTypeAbbr switch
             {
-                "P" => "FullTime",
-                "S" => "PartTime",
+                "P" => request.WorkTypeAbbr,
+                "S" => request.WorkTypeAbbr,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
