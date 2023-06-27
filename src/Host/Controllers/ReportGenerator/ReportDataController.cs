@@ -87,6 +87,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpPost("teacher/inspect")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
+    [OpenApiOperation("Get Missing Data Teachers by Academic Year", "")]
+    public Task<List<ATeacherDto>> InspectTeachers(GetMissingDataTeachersRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpGet("teacher/{id}")]
     [MustHavePermission(AACSBAction.View, AACSBResource.ReportData)]
     [OpenApiOperation("Get Teacher Detail By Id.", "")]
