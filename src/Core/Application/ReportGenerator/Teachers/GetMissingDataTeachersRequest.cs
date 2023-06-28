@@ -1,3 +1,4 @@
+using AACSB.WebApi.Domain.ReportGenerator.View;
 using Mapster;
 
 namespace AACSB.WebApi.Application.ReportGenerator.Teachers;
@@ -12,7 +13,7 @@ public class GetMissingDataTeachersRequestValidator : CustomValidator<GetMissing
 {
     public GetMissingDataTeachersRequestValidator()
     {
-        var conditions = new List<string>() { "degree", "responsibility", "qualification" };
+        var conditions = new List<string>() { "degree", "responsibility", "qualification", "worktype" };
 
         RuleFor(c => c.Column)
             .Must(x => conditions.Contains(x.ToLower()))
@@ -38,13 +39,14 @@ public class GetMissingDataTeachersRequestHandler : IRequestHandler<GetMissingDa
             "degree" => " AND ([Degree] IS NULL OR [DegreeYear] IS NULL)",
             "responsibility" => " AND [Responsibilities] IS NULL",
             "qualification" => " AND [Qualification] IS NULL",
+            "worktype" => " AND [WorkType] IS NULL",
             _ => throw new ArgumentException("Column only accepts: Degree, Responsibility, Qualification")
         };
 
         (string startSemester, string endSemester) = (request.AcademicYear + "1", request.AcademicYear + "2");
         object sqlParams = new { startSemester, endSemester };
 
-        var missingDataTeachers = await _repository.QueryAsync<ATeacherDto>(sql, sqlParams, cancellationToken: cancellationToken);
+        var missingDataTeachers = await _repository.QueryAsync<TableA31Course>(sql, sqlParams, cancellationToken: cancellationToken);
         _ = missingDataTeachers ?? throw new NotFoundException("Not Found.");
         return missingDataTeachers.Adapt<List<ATeacherDto>>();
     }
