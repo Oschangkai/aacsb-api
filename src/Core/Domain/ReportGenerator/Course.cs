@@ -8,8 +8,7 @@ namespace AACSB.WebApi.Domain.ReportGenerator;
 [Table("Courses", Schema="ReportGenerator")]
 public class Course : AuditableEntity, IAggregateRoot
 {
-    [Precision(5, 0)]
-    public decimal Semester { get; set; }
+    public short Semester { get; set; }
 
     [MaxLength(50)]
     public string Code { get; set; }
@@ -30,7 +29,7 @@ public class Course : AuditableEntity, IAggregateRoot
     public bool? Year { get; set; }
 
     [Comment("節次，M1, T6, W3，以逗點分隔")]
-    [MaxLength(500)]
+    [MaxLength(256)]
     public string? Time { get; set; }
 
     [Comment("教室")]
@@ -52,7 +51,7 @@ public class Course : AuditableEntity, IAggregateRoot
 
     public Course()
     {
-        Semester = decimal.Zero;
+        Semester = 0;
         Code = string.Empty;
         Name = string.Empty;
         EnglishName = string.Empty;

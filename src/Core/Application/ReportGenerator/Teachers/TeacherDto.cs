@@ -8,7 +8,7 @@ public class TeacherDto : IDto
     public string? DepartmentId { get; set; }
     public Guid? QualificationId { get; set; }
     public string? Degree { get; set; }
-    public decimal? DegreeYear { get; set; }
+    public short? DegreeYear { get; set; }
     public string? Responsibilities { get; set; }
     public string? WorkTypeAbbr { get; set; }
 }
