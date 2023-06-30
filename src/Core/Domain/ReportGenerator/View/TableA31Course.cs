@@ -32,8 +32,7 @@ public class TableA31Course
     [MaxLength(10)]
     public string? Degree { get; set; }
 
-    [Precision(4, 0)]
-    public decimal? DegreeYear { get; set; }
+    public short? DegreeYear { get; set; }
 
     [Comment("MT/RES/... 可以為多值")]
     [MaxLength(100)]

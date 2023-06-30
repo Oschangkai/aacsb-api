@@ -7,7 +7,7 @@ namespace AACSB.WebApi.Domain.ReportGenerator;
 [Table("Teachers", Schema="ReportGenerator")]
 public class Teacher : AuditableEntity, IAggregateRoot
 {
-    [MaxLength(80)]
+    [MaxLength(200)]
     public string Name { get; set; }
 
     [MaxLength(200)]
@@ -29,8 +29,7 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [MaxLength(10)]
     public string? Degree { get; set; }
 
-    [Precision(4, 0)]
-    public decimal? DegreeYear { get; set; }
+    public short? DegreeYear { get; set; }
 
     public Guid? DepartmentId { get; set; }
     public Department? Department { get; set; }
@@ -40,7 +39,7 @@ public class Teacher : AuditableEntity, IAggregateRoot
     public string? Responsibilities { get; set; }
 
     [Comment("Email")]
-    [MaxLength(80)]
+    [MaxLength(128)]
     public string? Email { get; set; }
 
     [Comment("職稱")]

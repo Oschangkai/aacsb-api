@@ -5,7 +5,7 @@ public class ATeacherDto
     public string Teacher { get; set; }
     public string? TeacherEnglishName { get; set; }
     public string? Degree { get; set; }
-    public decimal? DegreeYear { get; set; }
+    public short? DegreeYear { get; set; }
     public string? Responsibilities { get; set; }
     public string? Qualification { get; set; }
     public string? WorkType { get; set; }

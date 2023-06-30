@@ -108,7 +108,7 @@ public class FetchCoursesJob : IFetchCourseJob
                     join ec in englishCourses on cc.CourseNo equals ec.CourseNo
                     select new
                     {
-                        Semester = Convert.ToDecimal($"{year}{semester}"),
+                        Semester = Convert.ToInt16($"{year}{semester}"),
                         Code = cc.CourseNo,
                         Name = cc.CourseName,
                         EnglishName = ec.CourseName,

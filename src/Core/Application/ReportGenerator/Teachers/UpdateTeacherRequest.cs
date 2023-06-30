@@ -9,7 +9,7 @@ public class UpdateTeacherRequest : IRequest<MessageResponse>
     public string? WorkTypeAbbr { get; set; }
     public string? EnglishName { get; set; }
     public string? Degree { get; set; }
-    public decimal? DegreeYear { get; set; }
+    public short? DegreeYear { get; set; }
     public Guid? DepartmentId { get; set; }
     public string? Email { get; set; }
     public Guid? QualificationId { get; set; }
