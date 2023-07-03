@@ -16,7 +16,7 @@ public class TableA31Course
 
     public string? CourseTime { get; set; }
 
-    [MaxLength(80)]
+    [MaxLength(200)]
     public string? Teacher { get; set; }
 
     public Guid? TeacherId { get; set; }

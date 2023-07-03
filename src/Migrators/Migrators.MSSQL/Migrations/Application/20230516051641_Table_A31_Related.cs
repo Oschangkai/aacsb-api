@@ -9,7 +9,7 @@ namespace Migrators.MSSQL.Migrations.Application
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             const string view =
-                "CREATE OR ALTER VIEW [ReportGenerator].[V_Table_A31_Course] WITH SCHEMABINDING AS\n" +
+                "CREATE OR ALTER VIEW [ReportGenerator].[V_Table_A31_Course] AS\n" +
                 "WITH CTE AS (\n" +
                 "SELECT\n" +
                     "c.[Name] AS Course," +
@@ -41,6 +41,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 "LEFT JOIN [ReportGenerator].[Departments] d ON c.[DepartmentId] = d.Id\n" +
                 "WHERE t.Name <> ''\n" +
                     "AND c.Name NOT LIKE N'%專題%'\n" +
+                    "AND c.Name NOT LIKE N'%實務專題%'\n" +
                     "AND c.Name NOT LIKE N'%管理實務%'\n" +
                     "AND c.Name NOT LIKE N'%經營實務%'\n" +
                     "AND c.Name NOT LIKE N'%書報研討%'\n" +
