@@ -39,3 +39,4 @@ EXPOSE 5050
 EXPOSE 5060
 
 ENTRYPOINT ["dotnet", "AACSB.WebApi.Host.dll"]
+# dotnet dev-certs https -ep ${HOME}/.aspnet/https/aacsb.pfx -p aacsb2023
