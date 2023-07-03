@@ -5,18 +5,19 @@ services:
       dockerfile: Dockerfile
     container_name: api
     environment:
-      - "DatabaseSettings__ConnectionString=Server=db;Database=fullStackHeroDb;\
-        User=sa;Password=SuperSecurePassword123!;MultipleActiveResultSets=true"
+      - "DatabaseSettings__ConnectionString=Server=db;Database=AACSB;\
+        User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultSets=true"
       - "DatabaseSettings__DBProvider=mssql"
-      - "HangfireSettings__Storage__ConnectionString=Server=db;Database=fullSta\
-        ckHeroDb;User=sa;Password=SuperSecurePassword123!;MultipleActiveResultS\
+      - "HangfireSettings__Stor age__ConnectionString=Server=db;Database=AACSB;\
+        User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultS\
         ets=true"
       - "HangfireSettings__Storage__StorageProvider=mssql"
-      - "ASPNETCORE_Kestrel__Certificates__Default__Password=SuperSecurePasswor\
-        d123!"
-      - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/DN.Host.pfx"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Password=aacsb2023"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aacsb.pfx"
     volumes:
-      - ~/.aspnet/https:/https:ro
+      - ~/Documents/AACSB_test/aspnet/https:/https:ro
+      - ~/Documents/AACSB_test/Logs:/app/Logs
+      - ~/Documents/AACSB_test/Files:/app/Files
     ports:
       - "5050:5050"
       - "5060:5060"
@@ -24,10 +25,10 @@ services:
       - db
     restart: on-failure
   db:
-    image: "mcr.microsoft.com/mssql/server"
+    image: "mcr.microsoft.com/azure-sql-edge"
     container_name: db
     restart: always
     environment:
-      MSSQL_SA_PASSWORD: "SuperSecurePassword123!"
-      SA_PASSWORD: "SuperSecurePassword123!"
+      MSSQL_SA_PASSWORD: "$uper$ecureP@$$w0rd"
+      SA_PASSWORD: "$uper$ecureP@$$w0rd"
       ACCEPT_EULA: "Y"
