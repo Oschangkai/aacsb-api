@@ -21,6 +21,9 @@ RUN dotnet restore "src/Host/Host.csproj" --disable-parallel
 # Copy everything else and build
 COPY . .
 WORKDIR "/src/Host"
+RUN dotnet dev-certs https --clean  \
+    && dotnet dev-certs https -ep /https/aacsb.pfx -p aacsb2023  \
+    && chmod 644 /https/aacsb.pfx
 RUN dotnet publish "Host.csproj" -c Release -o /app/publish
 
 # Build the runtime image
@@ -28,6 +31,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 
 COPY --from=build /app/publish .
+COPY --from=build /https/* /https/
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers
@@ -39,4 +43,3 @@ EXPOSE 5050
 EXPOSE 5060
 
 ENTRYPOINT ["dotnet", "AACSB.WebApi.Host.dll"]
-# dotnet dev-certs https -ep ${HOME}/.aspnet/https/aacsb.pfx -p aacsb2023

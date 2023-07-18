@@ -8,7 +8,7 @@ services:
       - "DatabaseSettings__ConnectionString=Server=db;Database=AACSB;\
         User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultSets=true"
       - "DatabaseSettings__DBProvider=mssql"
-      - "HangfireSettings__Stor age__ConnectionString=Server=db;Database=AACSB;\
+      - "HangfireSettings__Storage__ConnectionString=Server=db;Database=AACSB;\
         User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultS\
         ets=true"
       - "HangfireSettings__Storage__StorageProvider=mssql"
