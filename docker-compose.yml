@@ -3,32 +3,58 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: api
+    container_name: som-api
     environment:
-      - "DatabaseSettings__ConnectionString=Server=db;Database=AACSB;\
+      - "DatabaseSettings__ConnectionString=Server=som-db;Database=AACSB;\
         User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultSets=true"
       - "DatabaseSettings__DBProvider=mssql"
-      - "HangfireSettings__Storage__ConnectionString=Server=db;Database=AACSB;\
-        User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultS\
-        ets=true"
-      - "HangfireSettings__Storage__StorageProvider=mssql"
+      - "HangfireSettings__Storage__ConnectionString=Server=som-db;Database=AACSB;\
+        User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultSets=true"
       - "ASPNETCORE_Kestrel__Certificates__Default__Password=aacsb2023"
       - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aacsb.pfx"
+    labels:
+      # Watchtower
+      com.centurylinklabs.watchtower.enable: "true"
+      com.centurylinklabs.watchtower.local-image: "true"
+      # Traefik
+      traefik.enable: "true"
+      traefik.docker.network: "som-network"
+      traefik.http.routers.som-api.entrypoints: "websecure"
+      traefik.http.routers.som-api.rule: "Host(`aacsb-api.example.com`)"
+      traefik.http.routers.som-api.middlewares: "compressor"
+      traefik.http.routers.som-api.tls: "true"
+      traefik.http.routers.som-api.tls.options: "default"
+      traefik.http.routers.som-api.tls.certresolver: "idsl-resolver"
+      traefik.http.routers.som-api.tls.domains[0].main: "aacsb-api.example.com"
+      traefik.http.services.som-api.loadbalancer.server.port: "5060"
     volumes:
-      - ~/Documents/AACSB_test/aspnet/https:/https:ro
-      - ~/Documents/AACSB_test/Logs:/app/Logs
-      - ~/Documents/AACSB_test/Files:/app/Files
+      - ~/som-api/Logs:/app/Logs
+      - ~/som-api/Files:/app/Files
     ports:
       - "5050:5050"
       - "5060:5060"
     depends_on:
       - db
     restart: on-failure
+    networks:
+      - som-network
   db:
     image: "mcr.microsoft.com/azure-sql-edge"
-    container_name: db
+    container_name: som-db
     restart: always
     environment:
       MSSQL_SA_PASSWORD: "$uper$ecureP@$$w0rd"
       SA_PASSWORD: "$uper$ecureP@$$w0rd"
       ACCEPT_EULA: "Y"
+    volumes:
+      - azure-sql-storage:/var/opt/mssql
+    networks:
+      - som-network
+
+networks:
+  som-network:
+    external: true
+
+volumes:
+  azure-sql-storage:
+    external: true
