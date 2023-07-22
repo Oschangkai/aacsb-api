@@ -16,17 +16,6 @@ services:
       # Watchtower
       com.centurylinklabs.watchtower.enable: "true"
       com.centurylinklabs.watchtower.local-image: "true"
-      # Traefik
-      traefik.enable: "true"
-      traefik.docker.network: "som-network"
-      traefik.http.routers.som-api.entrypoints: "websecure"
-      traefik.http.routers.som-api.rule: "Host(`aacsb-api.example.com`)"
-      traefik.http.routers.som-api.middlewares: "compressor"
-      traefik.http.routers.som-api.tls: "true"
-      traefik.http.routers.som-api.tls.options: "default"
-      traefik.http.routers.som-api.tls.certresolver: "idsl-resolver"
-      traefik.http.routers.som-api.tls.domains[0].main: "aacsb-api.example.com"
-      traefik.http.services.som-api.loadbalancer.server.port: "5060"
     volumes:
       - ~/som-api/Logs:/app/Logs
       - ~/som-api/Files:/app/Files
