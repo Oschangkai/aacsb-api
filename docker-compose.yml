@@ -12,6 +12,7 @@ services:
         User=sa;Password=$uper$ecureP@$$w0rd;MultipleActiveResultSets=true"
       - "ASPNETCORE_Kestrel__Certificates__Default__Password=aacsb2023"
       - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aacsb.pfx"
+      - "CorsSettings__Angular=https://aacsb-api.example.com"
     labels:
       # Watchtower
       com.centurylinklabs.watchtower.enable: "true"
