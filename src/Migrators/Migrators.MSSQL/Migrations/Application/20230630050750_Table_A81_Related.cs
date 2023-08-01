@@ -135,9 +135,9 @@ namespace Migrators.MSSQL.Migrations.Application
                 name: "Issue",
                 schema: "ReportGenerator",
                 table: "Research",
-                type: "smallint",
-                nullable: false,
-                defaultValue: (short)0);
+                type: "nvarchar(10)",
+                nullable: true,
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<string>(
                 name: "JournalsClass",
@@ -205,14 +205,14 @@ namespace Migrators.MSSQL.Migrations.Application
                 name: "PageEnd",
                 schema: "ReportGenerator",
                 table: "Research",
-                type: "smallint",
+                type: "int",
                 nullable: true);
 
             migrationBuilder.AddColumn<short>(
                 name: "PageStart",
                 schema: "ReportGenerator",
                 table: "Research",
-                type: "smallint",
+                type: "int",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
@@ -252,7 +252,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 name: "Volume",
                 schema: "ReportGenerator",
                 table: "Research",
-                type: "smallint",
+                type: "nvarchar(10)",
                 nullable: true);
 
             migrationBuilder.AddColumn<short>(

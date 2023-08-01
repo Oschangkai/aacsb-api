@@ -489,8 +489,8 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<bool?>("FullText")
                         .HasColumnType("bit");
 
-                    b.Property<short>("Issue")
-                        .HasColumnType("smallint");
+                    b.Property<string?>("Issue")
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("JournalsClass")
                         .HasMaxLength(128)
@@ -531,10 +531,10 @@ namespace Migrators.MSSQL.Migrations.Application
                     b.Property<string>("OtherAuthors")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short?>("PageEnd")
-                        .HasColumnType("smallint");
+                    b.Property<int?>("PageEnd")
+                        .HasColumnType("int");
 
-                    b.Property<short?>("PageStart")
+                    b.Property<int?>("PageStart")
                         .HasColumnType("smallint");
 
                     b.Property<string>("Project")
@@ -560,8 +560,8 @@ namespace Migrators.MSSQL.Migrations.Application
                         .HasColumnType("nvarchar(50)")
                         .HasComment("Journal 1, Journal 2, Presentation, Proceeding");
 
-                    b.Property<short?>("Volume")
-                        .HasColumnType("smallint");
+                    b.Property<string?>("Volume")
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<short?>("Year")
                         .HasColumnType("smallint");

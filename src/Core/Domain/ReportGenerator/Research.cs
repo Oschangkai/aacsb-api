@@ -49,9 +49,9 @@ public class Research : AuditableEntity, IAggregateRoot
     [MaxLength(256)]
     public string? City { get; set; }
 
-    public short? PageStart { get; set; }
+    public int? PageStart { get; set; }
 
-    public short? PageEnd { get; set; }
+    public int? PageEnd { get; set; }
 
     [MaxLength(512)]
     public string? Project { get; set; }
@@ -71,7 +71,9 @@ public class Research : AuditableEntity, IAggregateRoot
     [Comment("已接受/已發表")]
     public string? JournalsStatus { get; set; }
 
-    public short? Volume { get; set; }
+    [MaxLength(10)]
+    public string? Volume { get; set; }
 
-    public short Issue { get; set; }
+    [MaxLength(10)]
+    public string? Issue { get; set; }
 }
