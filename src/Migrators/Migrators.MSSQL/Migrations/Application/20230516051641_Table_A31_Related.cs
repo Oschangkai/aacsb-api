@@ -49,6 +49,8 @@ namespace Migrators.MSSQL.Migrations.Application
                     "AND c.Name NOT LIKE N'%實習%'\n" +
                     "AND c.Name NOT LIKE N'%講座%'\n" +
                     "AND c.Name NOT LIKE N'%論文導讀%'\n" +
+                    "AND c.Name NOT LIKE N'%科技法規總論%'\n" +
+                    "AND c.Name NOT LIKE N'%設計驅動創新實務%'\n" +
                     "AND c.Time IS NOT NULL\n" +
                     "AND c.Credit > 0\n" +
                     "AND (c.Credit % 1) = 0\n" +
