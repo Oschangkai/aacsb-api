@@ -208,7 +208,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 type: "int",
                 nullable: true);
 
-            migrationBuilder.AddColumn<short>(
+            migrationBuilder.AddColumn<int>(
                 name: "PageStart",
                 schema: "ReportGenerator",
                 table: "Research",
@@ -236,7 +236,7 @@ namespace Migrators.MSSQL.Migrations.Application
                 table: "Research",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<string>(
                 name: "Type",

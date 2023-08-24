@@ -34,10 +34,6 @@ public class TableA31Course
 
     public short? DegreeYear { get; set; }
 
-    [Comment("MT/RES/... 可以為多值")]
-    [MaxLength(100)]
-    public string? Responsibilities { get; set; }
-
     [MaxLength(80)]
     public string? Qualification { get; set; }
 

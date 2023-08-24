@@ -15,7 +15,8 @@ public class UpdateTeacherRequest : IRequest<MessageResponse>
     public Guid? QualificationId { get; set; }
     public DateTime? ResignDate { get; set; }
     public string? Title { get; set; }
-    public string? Responsibilities { get; set; }
+
+    public bool? Supervisor { get; set; }
 }
 
 public class UpdateTeacherRequestValidator : CustomValidator<UpdateTeacherRequest>
@@ -67,8 +68,8 @@ public class UpdateTeacherRequestHandler : IRequestHandler<UpdateTeacherRequest,
             teacher.ResignDate = request.ResignDate;
         if (request.Title != teacher.Title)
             teacher.Title = request.Title;
-        if (request.Responsibilities != teacher!.Responsibilities)
-            teacher.Responsibilities = request.Responsibilities;
+        if (request.Supervisor != teacher.Supervisor)
+            teacher.Supervisor = request.Supervisor;
 
         await _repository.UpdateAsync(teacher!, cancellationToken);
         return new MessageResponse(true, $"Updated Teacher {teacher!.Name}");
