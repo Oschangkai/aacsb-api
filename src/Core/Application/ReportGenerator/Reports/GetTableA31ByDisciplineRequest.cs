@@ -14,7 +14,10 @@ public class GetTableA31ByDisciplineRequestHandler : IRequestHandler<GetTableA31
     public GetTableA31ByDisciplineRequestHandler(IDapperRepository repository) => _repository = repository;
     public async Task<ICollection<TableA31>> Handle(GetTableA31ByDisciplineRequest request, CancellationToken cancellationToken)
     {
-        string sql = "SELECT * FROM [ReportGenerator].[F_GetTeacherDiscipline](@Semester) WHERE [Discipline] = @Discipline";
+        string sql = "SELECT d.*, r.[Responsibilities] " +
+                     "FROM [ReportGenerator].[F_GetTeacherDiscipline](@Semester) d " +
+                     "LEFT JOIN [ReportGenerator].[F_GetTeacherResponsibilities](@Semester) r ON d.[TeacherId] = r.[TeacherId] " +
+                     "WHERE [Discipline] = @Discipline";
         var sqlParams = new { request.Semester, request.Discipline };
 
         var tableA31 = await _repository.QueryAsync<TableA31>(sql, sqlParams, cancellationToken: cancellationToken);
