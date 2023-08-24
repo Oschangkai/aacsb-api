@@ -38,4 +38,6 @@ public class TableA31
 
     [Precision(2, 0)]
     public decimal Discipline { get; set; }
+
+    public string Responsibilities { get; set; } = null!;
 }
