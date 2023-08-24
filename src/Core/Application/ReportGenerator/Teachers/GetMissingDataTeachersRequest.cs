@@ -31,16 +31,15 @@ public class GetMissingDataTeachersRequestHandler : IRequestHandler<GetMissingDa
 
     public async Task<List<ATeacherDto>> Handle(GetMissingDataTeachersRequest request, CancellationToken cancellationToken)
     {
-        string sql = "SELECT DISTINCT [Teacher], [TeacherEnglishName], [Degree], [DegreeYear], [Responsibilities], [Qualification], [TeacherId]" +
+        string sql = "SELECT DISTINCT [Teacher], [TeacherEnglishName], [Degree], [DegreeYear], [Qualification], [TeacherId]" +
                      " FROM [ReportGenerator].[V_Table_A31_Course]" +
                      " WHERE ([Semester] = @StartSemester OR [Semester] = @EndSemester)";
         sql += request.Column.ToLower() switch
         {
             "degree" => " AND ([Degree] IS NULL OR [DegreeYear] IS NULL)",
-            "responsibility" => " AND [Responsibilities] IS NULL",
             "qualification" => " AND [Qualification] IS NULL",
             "worktype" => " AND [WorkType] IS NULL",
-            _ => throw new ArgumentException("Column only accepts: Degree, Responsibility, Qualification")
+            _ => throw new ArgumentException("Column only accepts: Degree, Qualification")
         };
 
         (string startSemester, string endSemester) = (request.AcademicYear + "1", request.AcademicYear + "2");

@@ -6,7 +6,6 @@ public class ATeacherDto
     public string? TeacherEnglishName { get; set; }
     public string? Degree { get; set; }
     public short? DegreeYear { get; set; }
-    public string? Responsibilities { get; set; }
     public string? Qualification { get; set; }
     public string? WorkType { get; set; }
     public Guid TeacherId { get; set; }

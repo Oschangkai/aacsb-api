@@ -34,9 +34,8 @@ public class Teacher : AuditableEntity, IAggregateRoot
     public Guid? DepartmentId { get; set; }
     public Department? Department { get; set; }
 
-    [Comment("MT/RES/... 可以為多值")]
-    [MaxLength(100)]
-    public string? Responsibilities { get; set; }
+    [Comment("是否擔任主管")]
+    public bool? Supervisor { get; set; }
 
     [Comment("Email")]
     [MaxLength(128)]

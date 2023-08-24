@@ -1,17 +1,27 @@
 [
   {
-    "Abbreviation": "UT"
+    "Abbreviation": "UG",
+    "EnglishDescription":"Undergraduate",
+    "Description": "大學部授課"
   },
   {
-    "Abbreviation": "MT"
+    "Abbreviation": "MT",
+    "EnglishDescription":"Master's",
+    "Description": "研究所授課"
   },
   {
-    "Abbreviation": "RES"
+    "Abbreviation": "RES",
+    "EnglishDescription":"Research",
+    "Description": "研究"
   },
   {
-    "Abbreviation": "SER"
+    "Abbreviation": "SER",
+    "EnglishDescription":"Service",
+    "Description": "服務"
   },
   {
-    "Abbreviation": "ADM"
+    "Abbreviation": "ADM",
+    "EnglishDescription":"Administration",
+    "Description": "擔任主管"
   }
 ]
