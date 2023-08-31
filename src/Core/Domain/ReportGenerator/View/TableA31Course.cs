@@ -10,6 +10,8 @@ public class TableA31Course
     [MaxLength(200)]
     public string? Course { get; set; }
 
+    public string? CourseEnglish { get; set; }
+
     public Guid? CourseId { get; set; }
 
     public string? CourseCode { get; set; }
