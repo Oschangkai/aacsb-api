@@ -34,4 +34,12 @@ public class ReportController : VersionedApiController
     {
         return Mediator.Send(request);
     }
+
+    [HttpPost("a81")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.Report)]
+    [OpenApiOperation("Get AACSSB Table 8-1", "")]
+    public Task<ICollection<TableA81>> GetTableA81(GetTableA81Request request)
+    {
+        return Mediator.Send(request);
+    }
 }
