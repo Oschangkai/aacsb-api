@@ -31,13 +31,4 @@ public partial class ApplicationDbContext
 
     // Views
     public DbSet<TableA31Course> TableA31Course => Set<TableA31Course>();
-
-    // Functions
-    [DbFunction("F_GetTeacherDiscipline", nameof(SchemaNames.ReportGenerator))]
-    public IQueryable<TableA31>? GetTeacherDiscipline(string @SemesterYear)
-        => throw new NotSupportedException($"{nameof(GetTeacherDiscipline)} cannot be called client side");
-
-    [DbFunction("F_GetQualificationPercentage", nameof(SchemaNames.ReportGenerator))]
-    public IQueryable<TableA32>? GetQualificationPercentage(string @Semester, string @Type, Guid @DepartmentId)
-        => throw new NotSupportedException($"{nameof(GetQualificationPercentage)} cannot be called client side");
 }

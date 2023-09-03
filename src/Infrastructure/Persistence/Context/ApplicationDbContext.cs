@@ -31,25 +31,5 @@ public partial class ApplicationDbContext : BaseDbContext
             .Entity<TableA31Course>()
             .ToView("V_Table_A31_Course", SchemaNames.ReportGenerator)
             .HasNoKey();
-
-        modelBuilder.Entity<TableA31>().HasNoKey();
-        modelBuilder
-            .HasDbFunction(
-                typeof(ApplicationDbContext).GetMethod(nameof(GetTeacherDiscipline), new[] { typeof(string) })!)
-            .HasName("F_GetTeacherDiscipline")
-            .HasParameter("SemesterYear").HasStoreType("nvarchar(3)");
-
-        modelBuilder.Entity<TableA32>().HasNoKey();
-        modelBuilder
-            .HasDbFunction(
-                typeof(ApplicationDbContext).GetMethod(nameof(GetQualificationPercentage), new[] { typeof(string), typeof(string), typeof(Guid) })!,
-                builder =>
-                {
-                    builder.HasName("F_GetQualificationPercentage");
-                    builder.HasSchema(nameof(TableA32));
-                    builder.HasParameter("Semester").HasStoreType("varchar(4)");
-                    builder.HasParameter("Type").HasStoreType("varchar(10)");
-                    builder.HasParameter("DepartmentId").HasStoreType("uniqueidentifier");
-                });
     }
 }
