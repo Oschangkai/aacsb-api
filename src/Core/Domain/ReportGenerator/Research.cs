@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,10 @@ public class Research : AuditableEntity, IAggregateRoot
     [MaxLength(50)]
     [Comment("Journal 1, Journal 2, Presentation, Proceeding")]
     public string Type { get; set; }
+
+    [Comment("Basic-Discovery, Applied-Integration, Teaching-Learning")]
+    [DefaultValue("Applied-Integration")]
+    public string Portfolio { get; set; }
 
     public string Title { get; set; }
 
