@@ -42,4 +42,12 @@ public class ReportController : VersionedApiController
     {
         return Mediator.Send(request);
     }
+
+    [HttpPost("teacher-resume")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.Report)]
+    [OpenApiOperation("Get AACSSB Teacher Resume", "")]
+    public Task<ICollection<TeacherResume>> GetTeacherResume(GetTeacherResumeRequest request)
+    {
+        return Mediator.Send(request);
+    }
 }
