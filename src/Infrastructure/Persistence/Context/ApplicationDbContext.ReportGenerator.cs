@@ -28,7 +28,4 @@ public partial class ApplicationDbContext
     public DbSet<Research> Research => Set<Research>();
 
     public DbSet<Responsibility> Responsibilities => Set<Responsibility>();
-
-    // Views
-    public DbSet<TableA31Course> TableA31Course => Set<TableA31Course>();
 }

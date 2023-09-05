@@ -26,10 +26,5 @@ public partial class ApplicationDbContext : BaseDbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasDefaultSchema(SchemaNames.Catalog);
-
-        modelBuilder
-            .Entity<TableA31Course>()
-            .ToView("V_Table_A31_Course", SchemaNames.ReportGenerator)
-            .HasNoKey();
     }
 }
