@@ -54,6 +54,9 @@ public class Teacher : AuditableEntity, IAggregateRoot
     [Comment("專業領域相關")]
     public ICollection<Professional>? Professional { get; set; }
 
+    [Comment("去重用，標示是否為同一人")]
+    public Guid? LinkTo { get; set; }
+
     public Guid? ImportSignatureId { get; set; }
     public ImportSignature? ImportSignature { get; set; }
 
