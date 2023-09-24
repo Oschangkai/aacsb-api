@@ -19,7 +19,7 @@ public class GetTeacherResumeRequestHandler : IRequestHandler<GetTeacherResumeRe
         const string getTeacherIdListSql =
             "SELECT DISTINCT TeacherId\n" +
             "FROM ReportGenerator.V_Table_A31_Course\n" +
-            "WHERE Semester IN (@AcademicYear+'1', @AcademicYear+'2')";
+            "WHERE Semester IN (@AcademicYear+'1', @AcademicYear+'2') AND [WorkType]='P'";
         var teacherIdList = await _repository.QueryAsync<TeacherIdList>(getTeacherIdListSql, new { request.AcademicYear }, cancellationToken: cancellationToken);
         _ = teacherIdList ?? throw new NotFoundException("TeacherIdList Empty.");
 
@@ -32,11 +32,13 @@ public class GetTeacherResumeRequestHandler : IRequestHandler<GetTeacherResumeRe
 
         const string getResearchListSql =
             "SELECT CONCAT_WS(', ',\n" +
-                "r.OtherAuthors, COALESCE(NULLIF(r.Year, ''), r.YearStart), r.Title,\n" +
+                "r.OtherAuthors, COALESCE(NULLIF(r.Year, ''), r.YearEnd, r.YearStart), r.Title,\n" +
                 "r.JournalsName, r.JournalsClass, r.Volume,\n" +
                 "IIF(PageStart IS NOT NULL AND PageStart <> 0, CONCAT(PageStart, '-', PageEnd), NULL)\n" +
             ") AS Value, r.Type, r.TeacherId\n" +
-            "FROM ReportGenerator.Research r";
+            "FROM ReportGenerator.Research r\n" +
+            "WHERE COALESCE(r.Year, r.YearEnd, r.YearStart) >= YEAR(GETDATE()) - 5 \n" +
+            "ORDER BY COALESCE(r.Year, r.YearEnd, r.YearStart) DESC";
         var researchList = await _repository.QueryAsync<TeacherResumeResearch>(getResearchListSql, cancellationToken: cancellationToken);
 
         foreach (var teacherId in teacherIdList.Select(x => x.TeacherId))
