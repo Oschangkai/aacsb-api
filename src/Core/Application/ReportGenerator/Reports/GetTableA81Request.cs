@@ -4,7 +4,7 @@ namespace AACSB.WebApi.Application.ReportGenerator.Reports;
 
 public class GetTableA81Request : IRequest<ICollection<TableA81>>
 {
-    public string Semester { get; set; }
+    public int[] Semester { get; set; }
 }
 
 public class GetTableA81RequestHandler : IRequestHandler<GetTableA81Request, ICollection<TableA81>>
@@ -15,7 +15,20 @@ public class GetTableA81RequestHandler : IRequestHandler<GetTableA81Request, ICo
     {
         string sql = $"SELECT *" +
                      $"FROM [ReportGenerator].[F_GetTeacherResearchCount](@Semester)";
-        var sqlParams = new { request.Semester };
+
+        string semester = string.Empty;
+        foreach (int s in request.Semester)
+        {
+            if (s.ToString().Length != 4)
+            {
+                throw new ArgumentException($"Semester {s.ToString()} Format Error.");
+            }
+
+            semester += string.Concat(s.ToString(), ",");
+        }
+
+        semester = semester[..^1];
+        var sqlParams = new { semester };
 
         var tableA81 = await _repository.QueryAsync<TableA81>(sql, sqlParams, cancellationToken: cancellationToken);
         _ = tableA81 ?? throw new NotFoundException("TableA81 Not Found.");

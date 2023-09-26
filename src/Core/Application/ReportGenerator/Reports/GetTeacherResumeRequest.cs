@@ -4,7 +4,7 @@ namespace AACSB.WebApi.Application.ReportGenerator.Reports;
 
 public class GetTeacherResumeRequest : IRequest<ICollection<TeacherResume>>
 {
-    public string AcademicYear { get; set; }
+    public int[] Semester { get; set; }
 }
 
 public class GetTeacherResumeRequestHandler : IRequestHandler<GetTeacherResumeRequest, ICollection<TeacherResume>>
@@ -14,21 +14,34 @@ public class GetTeacherResumeRequestHandler : IRequestHandler<GetTeacherResumeRe
 
     public async Task<ICollection<TeacherResume>> Handle(GetTeacherResumeRequest request, CancellationToken cancellationToken)
     {
+        string semester = string.Empty;
+        foreach (int s in request.Semester)
+        {
+            if (s.ToString().Length != 4)
+            {
+                throw new ArgumentException($"Semester {s.ToString()} Format Error.");
+            }
+
+            semester += string.Concat(s.ToString(), ",");
+        }
+
+        semester = semester[..^1];
+
         var teacherResume = new List<TeacherResume>();
 
         const string getTeacherIdListSql =
             "SELECT DISTINCT TeacherId\n" +
             "FROM ReportGenerator.V_Table_A31_Course\n" +
-            "WHERE Semester IN (@AcademicYear+'1', @AcademicYear+'2') AND [WorkType]='P'";
-        var teacherIdList = await _repository.QueryAsync<TeacherIdList>(getTeacherIdListSql, new { request.AcademicYear }, cancellationToken: cancellationToken);
+            "WHERE [Semester] IN (SELECT value FROM STRING_SPLIT(@Semester, ',')) AND [WorkType]='P'";
+        var teacherIdList = await _repository.QueryAsync<TeacherIdList>(getTeacherIdListSql, new { semester }, cancellationToken: cancellationToken);
         _ = teacherIdList ?? throw new NotFoundException("TeacherIdList Empty.");
 
         const string getCourseListSql =
             "SELECT CourseCode AS Code, Course AS Name, CourseEnglish AS EnglishName, CourseTime AS Time\n" +
             ", TeacherId, Teacher, Semester\n" +
             "FROM [ReportGenerator].[V_Table_A31_Course] c\n" +
-            "WHERE Semester IN (@AcademicYear+'1', @AcademicYear+'2')";
-        var courseList = await _repository.QueryAsync<TeacherResumeCourse>(getCourseListSql, new { request.AcademicYear }, cancellationToken: cancellationToken);
+            "WHERE [Semester] IN (SELECT value FROM STRING_SPLIT(@Semester, ','))";
+        var courseList = await _repository.QueryAsync<TeacherResumeCourse>(getCourseListSql, new { semester }, cancellationToken: cancellationToken);
 
         const string getResearchListSql =
             "SELECT CONCAT_WS(', ',\n" +
