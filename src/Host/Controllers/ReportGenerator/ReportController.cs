@@ -50,6 +50,15 @@ public class ReportController : VersionedApiController
     {
         return Mediator.Send(request);
     }
+
+    [HttpPost("supporting-headcount")]
+    [MustHavePermission(AACSBAction.View, AACSBResource.Report)]
+    [OpenApiOperation("Get AACSSB Supporting Teacher Headcount", "")]
+    public Task<ICollection<SupportingHeadcount>> GetSupportingHeadCount(GetSupportingHeadcountRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpPost("teacher-resume")]
     [MustHavePermission(AACSBAction.View, AACSBResource.Report)]
     [OpenApiOperation("Get AACSSB Teacher Resume", "")]
