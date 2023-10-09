@@ -1,0 +1,93 @@
+[
+  {
+    "Description": "期刊論文、專業書籍章節",
+    "EnglishDescription": "",
+    "Title": "Academic Research articles (peer-reviewed)",
+    "Certification": "EQUIS",
+    "Code": "甲"
+  },
+  {
+    "Description": "技術報告、產學合作",
+    "EnglishDescription": "",
+    "Title": "Practice-Oriented Research Articles (technical report)",
+    "Certification": "EQUIS",
+    "Code": "乙"
+  },
+  {
+    "Description": "教學創新文章、教學實踐計畫 (3-C)",
+    "EnglishDescription": "",
+    "Title": "Articles on Pedagogic Development and Innovation",
+    "Certification": "EQUIS",
+    "Code": "丙"
+  },
+  {
+    "Description": "研討會（學術）論文",
+    "EnglishDescription": "",
+    "Title": "Papers in academic conferences (peer-reviewed)",
+    "Certification": "EQUIS",
+    "Code": "丁"
+  },
+  {
+    "Description": "專業應用研討會",
+    "EnglishDescription": "",
+    "Title": "Papers in professional conferences",
+    "Certification": "EQUIS",
+    "Code": "戊"
+  },
+  {
+    "Description": "個案",
+    "EnglishDescription": "",
+    "Title": "Published Case Studies",
+    "Certification": "EQUIS",
+    "Code": "己"
+  },
+  {
+    "Description": "其他: 國科會計畫/專利",
+    "EnglishDescription": "",
+    "Title": "Other R&D Publications (peer-reviewed)",
+    "Certification": "EQUIS",
+    "Code": "庚"
+  },
+  {
+    "Description": "理論整合或應用",
+    "EnglishDescription": "Applied or Integration/Application",
+    "Title": "Applied-Integration",
+    "Certification": "AACSB-Portfolio",
+    "Code": "1"
+  },
+  {
+    "Description": "新知識或新方法的提出",
+    "EnglishDescription": "Basic or Discovery",
+    "Title": "Basic-Discovery",
+    "Certification": "AACSB-Portfolio",
+    "Code": "2"
+  },
+  {
+    "Description": "教學方面",
+    "EnglishDescription": "Teaching and Learning",
+    "Title": "Teaching-Learning",
+    "Certification": "AACSB-Portfolio",
+    "Code": "3"
+  },
+  {
+    "Description": "期刊論文(所有) journal papers",
+    "EnglishDescription": "Peer Reviewed Journals",
+    "Title": "Peer Reviewed Journals",
+    "Certification": "AACSB",
+    "Code": "A"
+  },
+  {
+    "Description": "研討會論文發表 presentations, conference paper, conference proceedings",
+    "EnglishDescription": "Additional Peer Reviewed Materials",
+    "Title": "Additional Peer Reviewed Materials",
+    "Certification": "AACSB",
+    "Code": "B"
+  },
+  {
+    "Description": "國科會/產學合作計畫/專業書籍與章節/專利/教育部教學實踐計畫 external and internal funding/projects, books, chapters, patent",
+    "EnglishDescription": "Other ICs",
+    "Title": "Other ICs",
+    "Certification": "AACSB",
+    "Code": "C"
+  }
+]

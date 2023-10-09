@@ -22,10 +22,11 @@ public partial class ApplicationDbContext
 
     // Teacher Related
     public DbSet<Qualification> Qualifications => Set<Qualification>();
-
     public DbSet<Professional> Professionals => Set<Professional>();
-
-    public DbSet<Research> Research => Set<Research>();
-
     public DbSet<Responsibility> Responsibilities => Set<Responsibility>();
+
+    // Teacher Research Related
+    public DbSet<Research> Research => Set<Research>();
+    public DbSet<ResearchType> ResearchTypes => Set<ResearchType>();
+    public DbSet<ResearchResearchType> ResearchResearchTypes => Set<ResearchResearchType>();
 }
