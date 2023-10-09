@@ -81,4 +81,6 @@ public class Research : AuditableEntity, IAggregateRoot
 
     [MaxLength(10)]
     public string? Issue { get; set; }
+
+    public ICollection<ResearchResearchType>? ResearchTypes { get; set; }
 }
