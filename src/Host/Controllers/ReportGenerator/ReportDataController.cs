@@ -1,8 +1,8 @@
 using AACSB.WebApi.Application.ReportGenerator;
 using AACSB.WebApi.Application.ReportGenerator.Courses;
 using AACSB.WebApi.Application.ReportGenerator.Reports;
+using AACSB.WebApi.Application.ReportGenerator.Research;
 using AACSB.WebApi.Application.ReportGenerator.Teachers;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace AACSB.WebApi.Host.Controllers.ReportGenerator;
 
@@ -158,5 +158,28 @@ public class ReportDataController : VersionedApiController
     public Task<List<QualificationDto>> GetQualifications()
     {
         return Mediator.Send(new GetQualificationsRequest());
+    }
+
+    [Route("research/import")]
+    [HttpPost]
+    [DisableRequestSizeLimit]
+    public Task<JobEnqueuedResponse> ImportResearch(List<IFormFile> files)
+    {
+        var request = new ImportResearchRequest();
+        foreach (var file in files)
+        {
+            if (file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                throw new NotSupportedException("Only support xlsx file.");
+
+            if (file.Length <= 0) continue;
+
+            string filePath = Path.GetTempPath();
+            string fileName = Path.ChangeExtension(Path.GetRandomFileName(), Path.GetExtension(file.FileName));
+            using var stream = System.IO.File.Create(Path.Combine(filePath, fileName));
+            file.CopyTo(stream);
+            request.Files.Add(Path.Combine(filePath, fileName));
+        }
+
+        return Mediator.Send(request);
     }
 }
