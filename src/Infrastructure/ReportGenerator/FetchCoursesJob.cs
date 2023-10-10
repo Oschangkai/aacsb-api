@@ -66,7 +66,7 @@ public class FetchCoursesJob : IFetchCourseJob
             cancellationToken);
     }
 
-    [Queue("notdefault")]
+    [Queue("importer")]
     public async Task FetchAsync(int year, int semester, string[] departments, CancellationToken cancellationToken)
     {
         // TODO: Use Unit of Work to do this job
