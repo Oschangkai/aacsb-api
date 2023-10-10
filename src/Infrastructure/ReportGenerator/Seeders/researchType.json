@@ -50,21 +50,21 @@
   },
   {
     "Description": "理論整合或應用",
-    "EnglishDescription": "Applied or Integration/Application",
+    "EnglishDescription": "Applied or Integration/Application. Applied or Integration/application scholarship that synthesizes new understandings or interpretations of knowledge or technology; develops new technologies, processes, tools, or uses; and/or refines, develops, or advances new methods based on existing knowledge. Intellectual contributions in this category are normally intended to contribute to and impact the practice of business.",
     "Title": "Applied-Integration",
     "Certification": "AACSB-Portfolio",
     "Code": "1"
   },
   {
     "Description": "新知識或新方法的提出",
-    "EnglishDescription": "Basic or Discovery",
+    "EnglishDescription": "Basic or Discovery. Basic or discovery scholarship (often referred to as discipline-based scholarship) that generates and communicates new knowledge and understanding and/or development of new methods. Intellectual contributions in this category are normally intended to impact the theory or knowledge of business.",
     "Title": "Basic-Discovery",
     "Certification": "AACSB-Portfolio",
     "Code": "2"
   },
   {
     "Description": "教學方面",
-    "EnglishDescription": "Teaching and Learning",
+    "EnglishDescription": "Teaching and Learning. Teaching and learning scholarship that develops and advances new understandings, insights, and teaching content and methods that impact learning behavior. Intellectual contributions in this category are normally intended to impact the teaching and/or pedagogy of business.",
     "Title": "Teaching-Learning",
     "Certification": "AACSB-Portfolio",
     "Code": "3"
