@@ -104,7 +104,7 @@ public class ImportResearchJob : IImportResearchJob
                 Type = ir.Type,
                 Title = ir.Title,
                 OtherAuthors = ir.OtherAuthors,
-                OrderAuthors = ir.OtherAuthors,
+                OrderAuthors = ir.OrderAuthors,
                 AddressAuthors = ir.AddressAuthors,
                 Publication = ir.Publication,
                 Seminar = ir.Seminar,
