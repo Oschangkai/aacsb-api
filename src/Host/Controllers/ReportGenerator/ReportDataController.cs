@@ -64,6 +64,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(request);
     }
 
+    [HttpPost("course/copy-discipline")]
+    [MustHavePermission(AACSBAction.Update, AACSBResource.ReportData)]
+    [OpenApiOperation("Copy discipline from one semester to the other", "")]
+    public Task<MessageResponse> CopyDiscipline(CopyDisciplineRequest request)
+    {
+        return Mediator.Send(request);
+    }
+
     [HttpDelete("course/{id}")]
     [MustHavePermission(AACSBAction.Delete, AACSBResource.ReportData)]
     [OpenApiOperation("mark deleted a course.", "")]
