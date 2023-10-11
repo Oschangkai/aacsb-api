@@ -40,7 +40,15 @@ public class ExcelReader : IExcelReader
 
                 if (IsSimpleType(prop.PropertyType)) // Skip columns with complex type
                 {
-                    prop.SetValue(obj, Convert.ChangeType(value.ToString()?.Trim(), Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType));
+                    try
+                    {
+                        prop.SetValue(obj, Convert.ChangeType(value.ToString()?.Trim(), Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType));
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogCritical($"Inserting value '{value.ToString()?.Trim()}' on column '{prop.Name}' failed. {e.Message}");
+                        throw;
+                    }
                 }
                 else if (prop.PropertyType == typeof(Teacher)) // Customized for Research importer
                 {
