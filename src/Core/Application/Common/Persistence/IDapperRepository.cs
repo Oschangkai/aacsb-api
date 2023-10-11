@@ -4,6 +4,8 @@ namespace AACSB.WebApi.Application.Common.Persistence;
 
 public interface IDapperRepository : ITransientService
 {
+    Task<int> UpdateAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Get an <see cref="IReadOnlyList{T}"/> using raw sql string with parameters.
     /// </summary>
