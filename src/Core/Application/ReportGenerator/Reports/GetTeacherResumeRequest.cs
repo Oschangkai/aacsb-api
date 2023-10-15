@@ -44,14 +44,16 @@ public class GetTeacherResumeRequestHandler : IRequestHandler<GetTeacherResumeRe
         var courseList = await _repository.QueryAsync<TeacherResumeCourse>(getCourseListSql, new { semester }, cancellationToken: cancellationToken);
 
         const string getResearchListSql =
-            "SELECT CONCAT_WS(', ',\n" +
-                "r.OtherAuthors, COALESCE(NULLIF(r.Year, ''), r.YearEnd, r.YearStart), r.Title,\n" +
-                "r.JournalsName, r.JournalsClass, r.Volume,\n" +
-                "IIF(PageStart IS NOT NULL AND PageStart <> 0, CONCAT(PageStart, '-', PageEnd), NULL)\n" +
-            ") AS Value, r.Type, r.TeacherId\n" +
+            "SELECT r.TeacherId, OtherAuthors AS Authors, COALESCE(Year, YearEnd, YearStart) AS Year,\n" +
+                "r.Title, COALESCE(JournalsName, Seminar) AS AppearedIn,\n" +
+                "r.Volume, r.Issue, NULLIF(CONCAT_WS('-', PageStart, PageEnd), '') AS Page, r.JournalsClass AS Class,\n" +
+                "STRING_AGG(RT.Code, ',') AS ResearchTypeCode\n" +
             "FROM ReportGenerator.Research r\n" +
+                "LEFT JOIN ReportGenerator.ResearchResearchType rrt on r.Id = rrt.ResearchId\n" +
+                "LEFT JOIN ReportGenerator.ResearchType rt on rrt.ResearchTypeId = rt.Id\n" +
             "WHERE COALESCE(r.Year, r.YearEnd, r.YearStart) >= YEAR(GETDATE()) - 5 \n" +
-            "ORDER BY COALESCE(r.Year, r.YearEnd, r.YearStart) DESC";
+            "GROUP BY r.TeacherId, r.OtherAuthors, r.Year, r.YearEnd, r.YearStart, r.Month, r.MonthEnd, r.MonthStart, r.Title, r.JournalsName, r.Seminar, r.JournalsClass, r.Volume, r.Issue, r.PageStart, r.PageEnd\n" +
+            "ORDER BY COALESCE(r.Year, r.YearEnd, r.YearStart) DESC, COALESCE(Month, MonthEnd, MonthStart) DESC";
         var researchList = await _repository.QueryAsync<TeacherResumeResearch>(getResearchListSql, cancellationToken: cancellationToken);
 
         foreach (var teacherId in teacherIdList.Select(x => x.TeacherId))
