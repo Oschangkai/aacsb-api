@@ -31,9 +31,17 @@ public class TeacherResume
 
 public class TeacherResumeResearch
 {
-    public string Value { get; set; }
+    public string Authors { get; set; }
 
-    public string Type { get; set; }
+    public string Year { get; set; }
+
+    public string Title { get; set; }
+    public string Volume { get; set; }
+    public string AppearedIn { get; set; }
+    public string Issue { get; set; }
+    public string Page { get; set; }
+    public string Class { get; set; }
+    public string ResearchTypeCode { get; set; }
     public Guid TeacherId { get; set; }
 }
 
