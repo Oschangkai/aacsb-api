@@ -4,6 +4,10 @@ namespace AACSB.WebApi.Application.Common.Persistence;
 
 public interface IDapperRepository : ITransientService
 {
+    public IDbTransaction BeginTransaction();
+
+    Task<int> ExecuteAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default);
+
     Task<int> UpdateAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default);
 
     /// <summary>
