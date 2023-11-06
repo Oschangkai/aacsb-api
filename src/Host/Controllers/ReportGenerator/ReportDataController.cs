@@ -168,6 +168,14 @@ public class ReportDataController : VersionedApiController
         return Mediator.Send(new GetQualificationsRequest());
     }
 
+    [Route("course/import")]
+    [HttpPost]
+    [DisableRequestSizeLimit]
+    public Task<JobEnqueuedResponse> ImportCourse(List<CourseDiscipline> request)
+    {
+        return Mediator.Send(new ImportCourseDisciplineRequest { CourseDisciplines = request });
+    }
+
     [Route("research/import")]
     [HttpPost]
     [DisableRequestSizeLimit]

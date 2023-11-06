@@ -13,6 +13,16 @@ public class DapperRepository : IDapperRepository
 
     public DapperRepository(ApplicationDbContext dbContext) => _dbContext = dbContext;
 
+    public async Task<int> ExecuteAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
+        => await _dbContext.Connection.ExecuteAsync(sql, param, transaction);
+
+    public IDbTransaction BeginTransaction()
+    {
+        var connection = _dbContext.Connection;
+        connection.Open();
+        return connection.BeginTransaction();
+    }
+
     public async Task<int> UpdateAsync(string sql, object? param = null, IDbTransaction? transaction = null, CancellationToken cancellationToken = default)
         => await _dbContext.Connection.ExecuteAsync(sql, param, transaction);
 
