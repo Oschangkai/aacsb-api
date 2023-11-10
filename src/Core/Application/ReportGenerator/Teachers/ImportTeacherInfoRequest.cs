@@ -4,7 +4,7 @@ public class TeacherInfo
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public string? WorkType { get; set; }
+    public string? WorkTypeAbbr { get; set; }
     public string? EnglishName { get; set; }
     public string? Degree { get; set; }
     public short? DegreeYear { get; set; }
