@@ -147,20 +147,6 @@ public class ImportResearchJob : IImportResearchJob
             if (ir.ResearchTypes is not null)
             {
                 var researchTypeCodeList = ir.ResearchTypes.Select(x => x.ResearchType.Code).ToList();
-                // TODO: pending deprecated research type column removed
-                switch (ir.Type)
-                {
-                    case "Journal 1":
-                    case "Journal 2":
-                        researchTypeCodeList.Add("A");
-                        break;
-                    case "Presentation":
-                        researchTypeCodeList.Add("B");
-                        break;
-                    case "Proceeding":
-                        researchTypeCodeList.Add("C");
-                        break;
-                }
 
                 var researchTypeList = researchTypes.Where(x => researchTypeCodeList.Contains(x.Code)).ToList();
                 r.ResearchTypes = researchTypeList.ConvertAll(x => new ResearchResearchType() { ResearchTypeId = x.Id });
