@@ -95,7 +95,7 @@ public class ImportTeacherInfoJob : IImportTeacherInfoJob
         await NotifyAsync($"Insert {teacherInfos.Count} rows to temp table...", 30, cancellationToken);
         const string insertSql =
             "INSERT INTO #TeacherInfo (Id, Name, WorkTypeAbbr, EnglishName, Degree, DegreeYear, Department, Email, EnglishNameInNtustCourse, NameInNtustCourse, Qualification, ResignDate, Title, Supervisor, LinkTo)\n" +
-            "VALUES (@Id, @Name, @WorkType, @EnglishName, @Degree, @DegreeYear, @Department, @Email, @EnglishNameInNtustCourse, @NameInNtustCourse, @Qualification, @ResignDate, @Title, @Supervisor, @LinkTo);\n";
+            "VALUES (@Id, @Name, @WorkTypeAbbr, @EnglishName, @Degree, @DegreeYear, @Department, @Email, @EnglishNameInNtustCourse, @NameInNtustCourse, @Qualification, @ResignDate, @Title, @Supervisor, @LinkTo);\n";
         int insertResult = await _repository.ExecuteAsync(insertSql, teacherInfos, transaction: trans, cancellationToken: cancellationToken);
         _logger.LogInformation($"=> {insertResult} rows inserted to temp table.");
         await NotifyAsync($"=> {insertResult} rows inserted to temp table.", 50, cancellationToken);
