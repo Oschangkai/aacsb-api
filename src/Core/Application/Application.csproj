@@ -9,7 +9,7 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
         <PackageReference Include="Mapster" Version="7.3.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.21" />
         <PackageReference Update="Roslynator.Analyzers" Version="4.4.0">
           <PrivateAssets>all</PrivateAssets>
